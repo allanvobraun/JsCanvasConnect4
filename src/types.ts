@@ -4,8 +4,9 @@ export interface Coordinates {
 }
 
 export interface Drawable {
-    color: Colors
-    draw(ctx: CanvasRenderingContext2D): void;
+    color: Colors,
+    position: Coordinates,
+    draw(): void;
 }
 
 export enum Colors {

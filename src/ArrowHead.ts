@@ -1,19 +1,19 @@
 import {Colors, Coordinates, Drawable} from "./types.js";
+import {drawEquilateralTriangle} from "./util.js";
 
 class ArrowHead implements Drawable {
     color: Colors;
-    private position: Coordinates;
+    position: Coordinates;
+    size: number;
 
-    constructor(x: number, y: number, color: Colors) {
+    constructor(position: Coordinates, size: number, color: Colors) {
         this.color = color;
-        this.position = {
-            x: x,
-            y: y
-        }
+        this.size = size;
+        this.position = position;
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
-
+    draw(): void {
+        drawEquilateralTriangle(this.position, this.size, this.color);
     }
-
 }
+export default ArrowHead;

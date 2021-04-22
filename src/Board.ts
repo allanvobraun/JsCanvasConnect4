@@ -1,8 +1,8 @@
 import {Colors, Coordinates, Drawable} from "./types.js";
 import Disc from "./Disc.js";
+import {ctx} from "./canvasContext.js";
 
 export default class Board implements Drawable {
-
     color: Colors;
     position: Coordinates;
     height: number;
@@ -37,7 +37,7 @@ export default class Board implements Drawable {
 
             for (let j = 0; j < this.columns; j++) {
                 const discX = this.calcDiscCenter(discDiameter, this.position.x, j);
-                row.push(new Disc(discX, discY, discDiameter, Colors.BACKGROUD));
+                row.push(new Disc({x: discX, y: discY}, discDiameter, Colors.BACKGROUD));
             }
             matrix.push(row);
         }
@@ -58,20 +58,20 @@ export default class Board implements Drawable {
         return firstCirclePosition + (radius * 2 + this.discMargin) * position;
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
-        this.drawBoard(ctx);
-        this.drawDiscs(ctx);
+    draw(): void {
+        this.drawBoard();
+        this.drawDiscs();
     }
 
-    drawBoard(ctx: CanvasRenderingContext2D): void {
+    drawBoard(): void {
         ctx.fillStyle = this.color;
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 
-    drawDiscs(ctx: CanvasRenderingContext2D): void {
+    drawDiscs(): void {
         for (const row of this.matrix) {
             for (const disc of row) {
-                disc.draw(ctx);
+                disc.draw();
             }
         }
     }
