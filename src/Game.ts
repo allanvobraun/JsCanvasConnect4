@@ -9,7 +9,7 @@ class Game {
     board: Board;
     arrow: ArrowHead;
     arrowPositions: Coordinates[];
-    arrowPositionHeight: number = 80; // relative to the fist top dist
+    arrowPositionHeight: number = 80; // relative to the fist top disc
     arrowSize: number = 40;
     GAME_WIDTH: number = canvas.width;
     GAME_HEIGHT: number = canvas.height;
@@ -17,8 +17,7 @@ class Game {
     constructor() {
         this.board = new Board(this.GAME_WIDTH, this.GAME_HEIGHT, Colors.BOARD);
         this.arrowPositions = this.getArrowPositions();
-
-        this.arrow = new ArrowHead(this.arrowPositions[0], this.arrowSize, Colors.RED);
+        this.arrow = ArrowHead.makeFromArrowPositions(this.arrowPositions, this.arrowSize, Colors.RED);
 
         this.drawables.push(this.board);
         this.drawables.push(this.arrow);
