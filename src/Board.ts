@@ -10,12 +10,12 @@ export default class Board implements Drawable {
     matrix: Disc[][];
     rows: number = 6;
     columns: number = 7;
-    boardMargin: number = 10;
-    discMargin: number = 10;
+    boardMargin: number = 20;
+    discMargin: number = 15;
 
     constructor(gameWidth: number, gameHeight: number, color: Colors) {
-        this.height = gameHeight - 20;
-        this.width = gameWidth - 120;
+        this.height = gameHeight - 60;
+        this.width = gameWidth - 170;
         this.color = color;
 
         this.position = {
@@ -27,7 +27,7 @@ export default class Board implements Drawable {
     }
 
 
-    buildMatrix(): Disc[][] {
+    private buildMatrix(): Disc[][] {
         const matrix: Disc[][] = [];
         const discDiameter = this.calcDiscDiameter();
 
@@ -44,12 +44,12 @@ export default class Board implements Drawable {
         return matrix;
     }
 
-    calcDiscDiameter(): number {
+    private calcDiscDiameter(): number {
         const diameter = (this.width - (this.discMargin * (this.columns - 1)) - 2 * this.boardMargin) / this.columns;
         return Math.floor(diameter);
     }
 
-    calcDiscCenter(diameter: number, coordinate: number, position: number): number {
+    private calcDiscCenter(diameter: number, coordinate: number, position: number): number {
         const radius = diameter / 2;
         const firstCirclePosition = coordinate + this.boardMargin + radius;
         if (position == 0) {
