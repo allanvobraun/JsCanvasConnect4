@@ -21,7 +21,7 @@ export default class Board implements Drawable {
         this.position = {
             x: gameWidth / 2 - this.width / 2,
             y: gameHeight - this.height - 10,
-        }
+        };
 
         this.matrix = this.buildMatrix();
     }
@@ -52,7 +52,7 @@ export default class Board implements Drawable {
     private calcDiscCenter(diameter: number, coordinate: number, position: number): number {
         const radius = diameter / 2;
         const firstCirclePosition = coordinate + this.boardMargin + radius;
-        if (position == 0) {
+        if (position === 0) {
             return firstCirclePosition;
         }
         return firstCirclePosition + (radius * 2 + this.discMargin) * position;

@@ -13,20 +13,20 @@ class ArrowHead implements Drawable {
         this.size = size;
         this.position = position;
         this.arrowPositions = arrowPositions;
-        console.log(this)
+        console.log(this);
     }
 
     static makeFromArrowPositions(arrowPositions: Coordinates[], size: number, color: Colors): ArrowHead {
         return new ArrowHead(arrowPositions[0], size, color, arrowPositions);
     }
 
-    moveLeft() {
+    moveLeft(): void {
         if (this.actualPosition === 0) return;
         this.position = this.arrowPositions[this.actualPosition - 1];
         this.draw();
     }
 
-    moveRight() {
+    moveRight(): void {
         if (this.actualPosition === this.arrowPositions.length) return;
         this.position = this.arrowPositions[this.actualPosition + 1];
         this.draw();

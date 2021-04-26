@@ -24,11 +24,11 @@ class Game {
     }
 
     getArrowPositions(): Coordinates[] {
-        return this.board.matrix[0].map((disc: Disc) => {
+        return this.board.matrix[0].map((disc: Disc): Coordinates => {
             return {
                 x: disc.position.x - this.arrowSize / 2,
                 y: disc.position.y - this.arrowPositionHeight
-            }
+            };
         });
     }
 

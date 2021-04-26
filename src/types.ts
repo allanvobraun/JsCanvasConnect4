@@ -1,11 +1,11 @@
 export interface Coordinates {
-    x: number,
-    y: number
+    x: number;
+    y: number;
 }
 
 export interface Drawable {
-    color: Colors,
-    position: Coordinates,
+    color: Colors;
+    position: Coordinates;
     draw(): void;
 }
 
