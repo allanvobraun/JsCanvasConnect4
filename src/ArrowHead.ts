@@ -25,12 +25,14 @@ class ArrowHead implements Drawable {
     moveLeft(): void {
         if (this.actualPosition === 0) return;
         this.position = this.arrowPositions[this.actualPosition - 1];
+        this.actualPosition--;
         UpdateDrawEvent.fire();
     }
 
     moveRight(): void {
         if (this.actualPosition === this.arrowPositions.length) return;
         this.position = this.arrowPositions[this.actualPosition + 1];
+        this.actualPosition++;
         UpdateDrawEvent.fire();
     }
 
