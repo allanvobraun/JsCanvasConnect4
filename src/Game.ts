@@ -3,6 +3,7 @@ import {canvas, ctx} from "./canvasContext.js";
 import Board from "./Board.js";
 import ArrowHead from "./ArrowHead.js";
 import Disc from "./Disc.js";
+import UpdateDrawEvent from "./UpdateDrawEvent.js";
 
 class Game {
     drawables: Drawable[] = [];
@@ -21,6 +22,8 @@ class Game {
 
         this.drawables.push(this.board);
         this.drawables.push(this.arrow);
+
+        UpdateDrawEvent.listen(this.update.bind(this));
     }
 
     getArrowPositions(): Coordinates[] {
@@ -32,10 +35,15 @@ class Game {
         });
     }
 
-    run(): void {
+    update(): void {
         ctx.clearRect(0, 0, this.GAME_WIDTH, this.GAME_HEIGHT);
         this.drawables.forEach((drawable: Drawable) => drawable.draw());
     }
+
+    run(): void {
+        this.update();
+    }
+
 }
 
 export default Game;

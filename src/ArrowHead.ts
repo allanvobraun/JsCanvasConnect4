@@ -1,5 +1,7 @@
 import {Colors, Coordinates, Drawable} from "./types.js";
 import {drawEquilateralTriangle} from "./util.js";
+import UpdateDrawEvent from "./UpdateDrawEvent.js";
+
 
 class ArrowHead implements Drawable {
     color: Colors;
@@ -23,13 +25,13 @@ class ArrowHead implements Drawable {
     moveLeft(): void {
         if (this.actualPosition === 0) return;
         this.position = this.arrowPositions[this.actualPosition - 1];
-        this.draw();
+        UpdateDrawEvent.fire();
     }
 
     moveRight(): void {
         if (this.actualPosition === this.arrowPositions.length) return;
         this.position = this.arrowPositions[this.actualPosition + 1];
-        this.draw();
+        UpdateDrawEvent.fire();
     }
 
     draw(): void {
