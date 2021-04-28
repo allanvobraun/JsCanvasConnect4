@@ -14,5 +14,10 @@ class GameController {
     moveRight(): void {
         this.game.arrow.moveRight();
     }
+
+    playerMove(): void {
+        this.game.board.placeDisc(this.game.arrow.actualPosition);
+    }
 }
+
 export default GameController;

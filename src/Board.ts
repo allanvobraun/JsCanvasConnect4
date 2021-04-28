@@ -7,7 +7,7 @@ export default class Board implements Drawable {
     position: Coordinates;
     height: number;
     width: number;
-    matrix: Disc[][];
+    matrix: Disc[][]; // top down legt right
     rows: number = 6;
     columns: number = 7;
     boardMargin: number = 20;
@@ -24,8 +24,37 @@ export default class Board implements Drawable {
         };
 
         this.matrix = this.buildMatrix();
+        console.log(this.matrix);
     }
 
+    placeDisc(index: number): void {
+        for (let i = this.rows; i--;) {
+            const row = this.matrix[i];
+            const disc: Disc = row[index];
+            if (disc.isEmpty) {
+                disc.changeColor(Colors.RED);
+                break;
+            }
+        }
+    }
+
+    draw(): void {
+        this.drawBoard();
+        this.drawDiscs();
+    }
+
+    drawBoard(): void {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    }
+
+    drawDiscs(): void {
+        for (const row of this.matrix) {
+            for (const disc of row) {
+                disc.draw();
+            }
+        }
+    }
 
     private buildMatrix(): Disc[][] {
         const matrix: Disc[][] = [];
@@ -56,23 +85,5 @@ export default class Board implements Drawable {
             return firstCirclePosition;
         }
         return firstCirclePosition + (radius * 2 + this.discMargin) * position;
-    }
-
-    draw(): void {
-        this.drawBoard();
-        this.drawDiscs();
-    }
-
-    drawBoard(): void {
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-    }
-
-    drawDiscs(): void {
-        for (const row of this.matrix) {
-            for (const disc of row) {
-                disc.draw();
-            }
-        }
     }
 }

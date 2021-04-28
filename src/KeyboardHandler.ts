@@ -10,6 +10,7 @@ class KeyboardHandler {
         this.keyActionMap = {
             'ArrowRight': () => this.controller.moveRight(),
             'ArrowLeft': () => this.controller.moveLeft(),
+            'Enter': () => this.controller.playerMove(),
         };
 
         window.addEventListener('keydown', (event: KeyboardEvent) => {

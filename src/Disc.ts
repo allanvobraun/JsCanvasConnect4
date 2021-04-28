@@ -1,10 +1,12 @@
 import {Colors, Coordinates, Drawable} from "./types";
 import {ctx} from "./canvasContext.js";
+import UpdateDrawEvent from "./UpdateDrawEvent.js";
 
 class Disc implements Drawable {
     position: Coordinates;
     diameter: number;
     color: Colors;
+    isEmpty: boolean = true;
 
     constructor(position: Coordinates, diameter: number, color: Colors) {
         this.color = color;
@@ -12,9 +14,15 @@ class Disc implements Drawable {
         this.position = position;
     }
 
+    changeColor(color: Colors): void {
+        this.color = color;
+        this.isEmpty = false;
+        UpdateDrawEvent.fire();
+    }
+
     draw(): void {
         ctx.beginPath();
-        ctx.arc(this.position.x, this.position.y, this.diameter /2, 0, 2 * Math.PI, false);
+        ctx.arc(this.position.x, this.position.y, this.diameter / 2, 0, 2 * Math.PI, false);
         ctx.fillStyle = this.color;
         ctx.fill();
     }
