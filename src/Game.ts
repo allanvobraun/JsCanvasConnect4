@@ -52,21 +52,16 @@ class Game {
         this.playerTurnIndex++;
     }
 
-    /**
-     * Return true for ok, false if cant place disc
-     */
-    placeDisc(columnIndex: number, color: Colors): boolean {
+    placeDisc(columnIndex: number, color: Colors): void {
         for (let i = this.board.rowCount; i--;) {
             const row = this.board.matrix[i];
             const disc: Disc = row[columnIndex];
             if (!disc.isDirty) {
                 disc.changeColor(color);
-                return true;
+                break;
             }
         }
-        return false;
     }
-
 
     getArrowPositions(): Coordinates[] {
         return this.board.matrix[0].map((disc: Disc): Coordinates => {
