@@ -30,7 +30,7 @@ class ArrowHead implements Drawable {
     }
 
     moveRight(): void {
-        if (this.actualPosition === this.arrowPositions.length) return;
+        if (this.actualPosition === this.arrowPositions.length -1) return;
         this.position = this.arrowPositions[this.actualPosition + 1];
         this.actualPosition++;
         UpdateDrawEvent.fire();
@@ -40,4 +40,5 @@ class ArrowHead implements Drawable {
         drawEquilateralTriangle(this.position, this.size, this.color);
     }
 }
+
 export default ArrowHead;
