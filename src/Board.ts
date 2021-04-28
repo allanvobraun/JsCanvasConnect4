@@ -46,6 +46,10 @@ export default class Board implements Drawable {
         }
     }
 
+    columnIsFull(columnIndex: number): boolean {
+        return this.matrix[0][columnIndex].isDirty;
+    }
+
     private buildMatrix(): Disc[][] {
         const matrix: Disc[][] = [];
         const discDiameter = this.calcDiscDiameter();

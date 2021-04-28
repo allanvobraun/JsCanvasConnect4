@@ -40,24 +40,31 @@ class Game {
     }
 
     get nextPlayer(): Player {
-        return this.players.get(this.playerTurnIndex +1);
+        return this.players.get(this.playerTurnIndex + 1);
     }
 
     play(): void {
+        if (this.board.columnIsFull(this.arrow.actualPosition)) {
+            return;
+        }
         this.arrow.changeColor(this.nextPlayer.color);
         this.placeDisc(this.arrow.actualPosition, this.actualPlayer.color);
         this.playerTurnIndex++;
     }
 
-    placeDisc(columnIndex: number, color: Colors): void {
+    /**
+     * Return true for ok, false if cant place disc
+     */
+    placeDisc(columnIndex: number, color: Colors): boolean {
         for (let i = this.board.rowCount; i--;) {
             const row = this.board.matrix[i];
             const disc: Disc = row[columnIndex];
             if (!disc.isDirty) {
                 disc.changeColor(color);
-                break;
+                return true;
             }
         }
+        return false;
     }
 
 
