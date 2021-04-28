@@ -7,6 +7,7 @@ export interface Drawable {
     color: Colors;
     position: Coordinates;
     draw(): void;
+    changeColor?(color: Colors): void;
 }
 
 export enum Colors {
@@ -14,5 +15,6 @@ export enum Colors {
     BLUE = '#020079',
     BACKGROUD = '#e3e3e3',
     BOARD = '#003466',
-    BLACK = '#000'
+    BLACK = '#000',
+    SHREK = '#668300'
 }

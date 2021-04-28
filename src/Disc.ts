@@ -6,7 +6,7 @@ class Disc implements Drawable {
     position: Coordinates;
     diameter: number;
     color: Colors;
-    isEmpty: boolean = true;
+    isDirty: boolean = false;
 
     constructor(position: Coordinates, diameter: number, color: Colors) {
         this.color = color;
@@ -16,7 +16,7 @@ class Disc implements Drawable {
 
     changeColor(color: Colors): void {
         this.color = color;
-        this.isEmpty = false;
+        this.isDirty = true;
         UpdateDrawEvent.fire();
     }
 

@@ -5,7 +5,6 @@
   "main": "src/index.js",
   "author": "allan braun",
   "license": "MIT",
-  "type": "module",
   "scripts": {
     "watch": "tsc --watch",
     "build": "tsc",

@@ -1,15 +1,16 @@
 import {Colors, Coordinates, Drawable} from "./types.js";
 import Disc from "./Disc.js";
 import {ctx} from "./canvasContext.js";
+import Player from "./Player.js";
 
 export default class Board implements Drawable {
     color: Colors;
     position: Coordinates;
     height: number;
     width: number;
-    matrix: Disc[][]; // top down legt right
-    rows: number = 6;
-    columns: number = 7;
+    matrix: Disc[][]; // top down left right
+    rowCount: number = 6;
+    columnCount: number = 7;
     boardMargin: number = 20;
     discMargin: number = 15;
 
@@ -25,17 +26,6 @@ export default class Board implements Drawable {
 
         this.matrix = this.buildMatrix();
         console.log(this.matrix);
-    }
-
-    placeDisc(index: number): void {
-        for (let i = this.rows; i--;) {
-            const row = this.matrix[i];
-            const disc: Disc = row[index];
-            if (disc.isEmpty) {
-                disc.changeColor(Colors.RED);
-                break;
-            }
-        }
     }
 
     draw(): void {
@@ -60,11 +50,11 @@ export default class Board implements Drawable {
         const matrix: Disc[][] = [];
         const discDiameter = this.calcDiscDiameter();
 
-        for (let i = 0; i < this.rows; i++) {
+        for (let i = 0; i < this.rowCount; i++) {
             const row: Disc[] = [];
             const discY = this.calcDiscCenter(discDiameter, this.position.y, i);
 
-            for (let j = 0; j < this.columns; j++) {
+            for (let j = 0; j < this.columnCount; j++) {
                 const discX = this.calcDiscCenter(discDiameter, this.position.x, j);
                 row.push(new Disc({x: discX, y: discY}, discDiameter, Colors.BACKGROUD));
             }
@@ -74,7 +64,7 @@ export default class Board implements Drawable {
     }
 
     private calcDiscDiameter(): number {
-        const diameter = (this.width - (this.discMargin * (this.columns - 1)) - 2 * this.boardMargin) / this.columns;
+        const diameter = (this.width - (this.discMargin * (this.columnCount - 1)) - 2 * this.boardMargin) / this.columnCount;
         return Math.floor(diameter);
     }
 

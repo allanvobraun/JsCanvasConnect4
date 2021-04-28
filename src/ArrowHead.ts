@@ -22,6 +22,11 @@ class ArrowHead implements Drawable {
         return new ArrowHead(arrowPositions[0], size, color, arrowPositions);
     }
 
+    changeColor(color: Colors): void {
+        this.color = color;
+        UpdateDrawEvent.fire();
+    }
+
     moveLeft(): void {
         if (this.actualPosition === 0) return;
         this.position = this.arrowPositions[this.actualPosition - 1];
@@ -30,7 +35,7 @@ class ArrowHead implements Drawable {
     }
 
     moveRight(): void {
-        if (this.actualPosition === this.arrowPositions.length -1) return;
+        if (this.actualPosition === this.arrowPositions.length - 1) return;
         this.position = this.arrowPositions[this.actualPosition + 1];
         this.actualPosition++;
         UpdateDrawEvent.fire();

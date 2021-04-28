@@ -16,7 +16,7 @@ class GameController {
     }
 
     playerMove(): void {
-        this.game.board.placeDisc(this.game.arrow.actualPosition);
+        this.game.play();
     }
 }
 
