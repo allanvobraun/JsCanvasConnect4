@@ -26,6 +26,10 @@ class Disc implements Drawable {
         ctx.fillStyle = this.color;
         ctx.fill();
     }
+
+    equals(other: Disc): boolean {
+        return this.color === other?.color && this.isDirty;
+    }
 }
 
 export default Disc;

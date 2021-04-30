@@ -49,7 +49,14 @@ class Game {
         }
         this.arrow.changeColor(this.nextPlayer.color);
         this.placeDisc(this.arrow.actualPosition, this.actualPlayer.color);
+        this.winCheck();
         this.playerTurnIndex++;
+    }
+
+    winCheck(): void {
+        if (this.board.checkConnectFour()) {
+            alert("GANHOU");
+        }
     }
 
     placeDisc(columnIndex: number, color: Colors): void {

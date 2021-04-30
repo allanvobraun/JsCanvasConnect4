@@ -1,7 +1,6 @@
 import {Colors, Coordinates, Drawable} from "./types.js";
 import Disc from "./Disc.js";
 import {ctx} from "./canvasContext.js";
-import Player from "./Player.js";
 
 export default class Board implements Drawable {
     color: Colors;
@@ -25,7 +24,7 @@ export default class Board implements Drawable {
         };
 
         this.matrix = this.buildMatrix();
-        console.log(this.matrix);
+        console.log(this);
     }
 
     draw(): void {
@@ -48,6 +47,36 @@ export default class Board implements Drawable {
 
     columnIsFull(columnIndex: number): boolean {
         return this.matrix[0][columnIndex].isDirty;
+    }
+
+    checkConnectFour(): boolean {
+        const matrix_tanspose = this.matrix[0].map(
+            (item, i) => this.matrix.map(row => row[i])
+        );
+
+        return this.matrix.some((row: Disc[]) => this.checkArrayConnectFour(row)) ||
+            matrix_tanspose.some((column: Disc[]) => this.checkArrayConnectFour(column));
+    }
+
+    checkArrayConnectFour(row: Disc[]): boolean {
+        let counter = 0;
+        const similar = 4;
+
+        for (let i = 0; i < row.length; i++) {
+            const actual: Disc = row[i];
+            const next: Disc = row[i + 1];
+
+            if (counter === similar - 1) {
+                return true;
+            }
+
+            if (actual.equals(next)) {
+                counter++;
+                continue;
+            }
+            counter = 0;
+        }
+        return false;
     }
 
     private buildMatrix(): Disc[][] {

@@ -18,14 +18,16 @@ class KeyboardHandler {
         };
 
         window.addEventListener('keydown', (event: KeyboardEvent) => {
-            this.keyDownActionMap[event.key]();
+            const action = this.keyDownActionMap[event.key];
+            action?.();
         });
 
         window.addEventListener('keydown', (event: KeyboardEvent) => {
             if (event.repeat) {
                 return;
             }
-            this.keyPressActionMap[event.key]();
+            const action = this.keyPressActionMap[event.key];
+            action?.();
         });
     }
 }
