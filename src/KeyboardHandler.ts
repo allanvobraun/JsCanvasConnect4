@@ -14,7 +14,7 @@ class KeyboardHandler {
         };
 
         this.keyPressActionMap = {
-            'Enter': () => this.controller.playerMove(),
+            ' ': () => this.controller.playerMove(),
         };
 
         window.addEventListener('keydown', (event: KeyboardEvent) => {

@@ -56,7 +56,11 @@ class Game {
 
     winCheck(): void {
         if (this.board.checkConnectFour()) {
-            const modal = new EndGameModal(Colors.BLUE);
+            const modal = new EndGameModal({
+                winnerColor: this.actualPlayer.color,
+                okButtonText: 'Tentar de novo',
+                onOk: (param) => console.log(param),
+            });
             modal.show();
         }
     }
