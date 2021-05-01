@@ -1,11 +1,11 @@
-import {Colors, Coordinates, Drawable} from "./types.js";
-import {canvas, ctx} from "./canvasContext.js";
-import Board from "./Board.js";
-import ArrowHead from "./ArrowHead.js";
-import Disc from "./Disc.js";
-import UpdateDrawEvent from "./UpdateDrawEvent.js";
-import Player from "./Player.js";
-import CircularArray from "./CircularArray.js";
+import {Colors, Coordinates, Drawable} from "./types";
+import {canvas, ctx} from "./canvasContext";
+import Board from "./Board";
+import ArrowHead from "./ArrowHead";
+import Disc from "./Disc";
+import UpdateDrawEvent from "./UpdateDrawEvent";
+import Player from "./Player";
+import CircularArray from "./CircularArray";
 
 class Game {
     drawables: Drawable[] = [];
@@ -55,7 +55,7 @@ class Game {
 
     winCheck(): void {
         if (this.board.checkConnectFour()) {
-            alert("GANHOU");
+            alert("O jogador" + this.actualPlayer.color);
         }
     }
 

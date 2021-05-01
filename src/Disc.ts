@@ -1,6 +1,6 @@
 import {Colors, Coordinates, Drawable} from "./types";
-import {ctx} from "./canvasContext.js";
-import UpdateDrawEvent from "./UpdateDrawEvent.js";
+import {ctx} from "./canvasContext";
+import UpdateDrawEvent from "./UpdateDrawEvent";
 
 class Disc implements Drawable {
     position: Coordinates;

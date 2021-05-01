@@ -1,4 +1,4 @@
-import {Colors} from "./types.js";
+import {Colors} from "./types";
 
 class Player {
     name: string;

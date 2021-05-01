@@ -1,6 +1,6 @@
-import {Colors, Coordinates, Drawable} from "./types.js";
-import Disc from "./Disc.js";
-import {ctx} from "./canvasContext.js";
+import {Colors, Coordinates, Drawable} from "./types";
+import Disc from "./Disc";
+import {ctx} from "./canvasContext";
 
 export default class Board implements Drawable {
     color: Colors;

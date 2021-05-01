@@ -1,5 +1,5 @@
-import {Colors, Coordinates} from "./types.js";
-import {ctx} from "./canvasContext.js";
+import {Colors, Coordinates} from "./types";
+import {ctx} from "./canvasContext";
 
 export function drawEquilateralTriangle(
     coordinate: Coordinates,

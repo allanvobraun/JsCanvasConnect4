@@ -1,6 +1,6 @@
-import {Colors, Coordinates, Drawable} from "./types.js";
-import {drawEquilateralTriangle} from "./util.js";
-import UpdateDrawEvent from "./UpdateDrawEvent.js";
+import {Colors, Coordinates, Drawable} from "./types";
+import {drawEquilateralTriangle} from "./util";
+import UpdateDrawEvent from "./UpdateDrawEvent";
 
 
 class ArrowHead implements Drawable {
