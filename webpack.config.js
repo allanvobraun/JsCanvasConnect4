@@ -1,6 +1,7 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
 module.exports = {
   entry: './src/index.ts',
@@ -23,14 +24,26 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
     alias: {
-      resources : path.resolve(__dirname, './resources'),
+      resources: path.resolve(__dirname, './resources'),
     },
   },
 
+  plugins: [
+    new HtmlWebpackPlugin({
+      alwaysWriteToDisk: true,
+      template: './index.html',
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+    }),
+    new HtmlWebpackHarddiskPlugin()
+  ],
+
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
+    watchContentBase: true,
     compress: true,
-    port: 9000,
+    port: 9000
   },
 
   output: {
@@ -39,12 +52,4 @@ module.exports = {
     clean: true,
   },
 
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './index.html',
-    }),
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-    }),
-  ],
 };

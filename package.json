@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "css-loader": "^5.2.4",
+    "html-webpack-harddisk-plugin": "^2.0.0",
     "html-webpack-plugin": "^5.3.1",
     "mini-css-extract-plugin": "^1.6.0",
     "ts-loader": "^9.1.1",
