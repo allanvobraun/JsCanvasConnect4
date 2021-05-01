@@ -42,6 +42,11 @@ export class EndGameModal {
         return this.setElement('.modal__title', title);
     }
 
+    setButtonsText(): EndGameModal {
+        return this.setElement('.modal__btn_ok', this.okButtonText)
+            .setElement('.modal__btn_close', this.closeButtonText);
+    }
+
     setOnOkHook(hook: (endGameModal?: EndGameModal) => void): EndGameModal {
         if (!hook) return this;
         const okButton = this.modalReference.querySelector('.modal__btn_ok');
@@ -69,6 +74,7 @@ export class EndGameModal {
     }
 
     private buildContent(color: Colors): EndGameModal {
+        this.setButtonsText();
         const content = `
             ${this.message}&nbsp&nbsp
             <span class="color-displayer" style="background-color: ${color}"></span>

@@ -37,7 +37,6 @@ class Game {
         this.drawables.push(this.arrow);
 
         this.endGameModal = new EndGameModal({
-            okButtonText: 'Tentar de novo',
             onOk: (param) => this.reset(),
         });
         UpdateDrawEvent.listen(this.update.bind(this));
