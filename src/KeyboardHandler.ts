@@ -1,4 +1,5 @@
 import GameController from "./GameController";
+import {canvas} from "./canvasContext";
 
 class KeyboardHandler {
     controller: GameController;
@@ -16,16 +17,20 @@ class KeyboardHandler {
         this.keyPressActionMap = {
             ' ': () => this.controller.playerMove(),
         };
+    }
 
-        window.addEventListener('keydown', (event: KeyboardEvent) => {
+    enableListeners(): void {
+        canvas.addEventListener('keydown', (event) => {
+            event.stopPropagation();
+            event.preventDefault();
             const action = this.keyDownActionMap[event.key];
             action?.();
         });
+        canvas.addEventListener('keydown', (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            if (event.repeat) return;
 
-        window.addEventListener('keydown', (event: KeyboardEvent) => {
-            if (event.repeat) {
-                return;
-            }
             const action = this.keyPressActionMap[event.key];
             action?.();
         });

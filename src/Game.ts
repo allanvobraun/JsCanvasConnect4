@@ -7,6 +7,7 @@ import UpdateDrawEvent from "./UpdateDrawEvent";
 import Player from "./Player";
 import CircularArray from "./CircularArray";
 import EndGameModal from "./EndGameModal";
+import KeyboardHandler from "./KeyboardHandler";
 
 class Game {
     drawables: Drawable[] = [];
@@ -19,6 +20,8 @@ class Game {
     arrowSize: number = 40;
     GAME_WIDTH: number = canvas.width;
     GAME_HEIGHT: number = canvas.height;
+    endGameModal: EndGameModal;
+    keyboardHandler: KeyboardHandler;
 
     constructor() {
         this.board = new Board(this.GAME_WIDTH, this.GAME_HEIGHT, Colors.BOARD);
@@ -33,6 +36,10 @@ class Game {
         this.drawables.push(this.board);
         this.drawables.push(this.arrow);
 
+        this.endGameModal = new EndGameModal({
+            okButtonText: 'Tentar de novo',
+            onOk: (param) => this.reset(),
+        });
         UpdateDrawEvent.listen(this.update.bind(this));
     }
 
@@ -55,14 +62,14 @@ class Game {
     }
 
     winCheck(): void {
-        if (this.board.checkConnectFour()) {
-            const modal = new EndGameModal({
-                winnerColor: this.actualPlayer.color,
-                okButtonText: 'Tentar de novo',
-                onOk: (param) => console.log(param),
-            });
-            modal.show();
-        }
+        if (!this.board.checkConnectFour()) return;
+        setTimeout(() => {
+            this.endGameModal.show(this.actualPlayer.color);
+        }, 200);
+    }
+
+    reset(): void {
+        location.reload();
     }
 
     placeDisc(columnIndex: number, color: Colors): void {
@@ -91,9 +98,10 @@ class Game {
     }
 
     run(): void {
+        canvas.focus();
+        this.keyboardHandler?.enableListeners();
         this.update();
     }
-
 }
 
 export default Game;

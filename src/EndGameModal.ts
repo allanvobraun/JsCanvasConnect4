@@ -2,7 +2,6 @@ import MicroModal from 'micromodal';
 import {Colors} from "./types";
 
 interface EndGameModalOptions {
-    winnerColor: Colors;
     modalId?: string;
     title?: string;
     message?: string;
@@ -20,10 +19,8 @@ export class EndGameModal {
     okButtonText: string = 'Novo Jogo';
     closeButtonText: string = 'Fechar';
     modalReference: HTMLElement;
-    winnerColor: Colors;
 
     constructor(options: EndGameModalOptions) {
-        this.winnerColor = options.winnerColor;
         this.modalId = options.modalId ?? this.modalId;
         this.title = options.title ?? this.title;
         this.message = options.message ?? this.message;
@@ -33,8 +30,8 @@ export class EndGameModal {
         this.modalReference = document.getElementById(this.modalId);
         this.setTitle(this.title);
         this.setOnOkHook(options.onOk);
-        this.buildContent();
-        MicroModal.init({onShow: options.onShow, onClose: options.onClose});
+
+        MicroModal.init();
     }
 
     setContent(content: string): EndGameModal {
@@ -48,11 +45,16 @@ export class EndGameModal {
     setOnOkHook(hook: (endGameModal?: EndGameModal) => void): EndGameModal {
         if (!hook) return this;
         const okButton = this.modalReference.querySelector('.modal__btn_ok');
-        okButton.addEventListener('click', (e) => hook(this), false);
+
+        okButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            hook(this);
+        });
         return this;
     }
 
-    show(): void {
+    show(winnerColor: Colors): void {
+        this.buildContent(winnerColor);
         MicroModal.show(this.modalId);
     }
 
@@ -66,10 +68,10 @@ export class EndGameModal {
         return this;
     }
 
-    private buildContent(): EndGameModal {
+    private buildContent(color: Colors): EndGameModal {
         const content = `
             ${this.message}&nbsp&nbsp
-            <span class="color-displayer" style="background-color: ${this.winnerColor}"></span>
+            <span class="color-displayer" style="background-color: ${color}"></span>
         `;
         return this.setContent(content);
     }

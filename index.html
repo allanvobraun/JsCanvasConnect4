@@ -5,7 +5,7 @@
     <title>Connect 4</title>
 </head>
 <body>
-<canvas id="game" height="600" width="800"></canvas>
+<canvas tabindex="1" id="game" height="600" width="800"></canvas>
 
 
 <div class="modal micromodal-slide" id="end-game-modal" aria-hidden="true">
@@ -21,8 +21,13 @@
                 content
             </main>
             <footer class="modal__footer">
-                <button class="modal__btn modal__btn-primary modal__btn_ok">Continue</button>
-                <button class="modal__btn modal__btn_close" data-micromodal-close aria-label="Close this dialog window">
+                <button class="modal__btn modal__btn-primary modal__btn_ok" tabindex="-1">Continue</button>
+                <button
+                        class="modal__btn modal__btn_close"
+                        data-micromodal-close
+                        tabindex="-1"
+                        aria-label="Close this dialog window"
+                >
                     Close
                 </button>
             </footer>

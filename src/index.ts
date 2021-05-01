@@ -3,8 +3,9 @@ import GameController from "./GameController";
 import KeyboardHandler from "./KeyboardHandler";
 import 'resources/css/index.css';
 
-const game = new Game();
-const controller = new GameController(game);
-const inputHandler = new KeyboardHandler(controller);
-game.run();
-
+window.onload = () => {
+    const game = new Game();
+    const controller = new GameController(game);
+    game.keyboardHandler = new KeyboardHandler(controller);
+    game.run();
+};
