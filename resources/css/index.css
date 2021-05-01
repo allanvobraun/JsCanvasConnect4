@@ -32,7 +32,7 @@ body {
 
 .modal__container {
     background-color: #fff;
-    padding: 30px;
+    padding: 15px 25px;
     max-width: 500px;
     max-height: 100vh;
     border-radius: 4px;
@@ -47,6 +47,9 @@ body {
 }
 
 .modal__title {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
     margin-top: 0;
     margin-bottom: 0;
     font-weight: 600;
@@ -59,6 +62,7 @@ body {
 .modal__close {
     background: transparent;
     border: 0;
+    cursor: pointer;
 }
 
 .modal__header .modal__close:before { content: "\2715"; }
@@ -72,10 +76,7 @@ body {
 
 .modal__btn {
     font-size: .875rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    padding-top: .5rem;
-    padding-bottom: .5rem;
+    padding: .5rem 1rem;
     background-color: #e6e6e6;
     color: rgba(0,0,0,.8);
     border-radius: .25rem;
@@ -86,7 +87,7 @@ body {
     text-transform: none;
     overflow: visible;
     line-height: 1.15;
-    margin: 0;
+    margin: 0 .4rem;
     will-change: transform;
     -moz-osx-font-smoothing: grayscale;
     -webkit-backface-visibility: hidden;
@@ -94,8 +95,12 @@ body {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
     transition: -webkit-transform .25s ease-out;
-    transition: transform .25s ease-out;
     transition: transform .25s ease-out,-webkit-transform .25s ease-out;
+}
+
+.modal__footer {
+    display: flex;
+    justify-content: flex-end;
 }
 
 .modal__btn:focus, .modal__btn:hover {
