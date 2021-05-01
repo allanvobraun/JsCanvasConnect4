@@ -6,6 +6,7 @@ import Disc from "./Disc";
 import UpdateDrawEvent from "./UpdateDrawEvent";
 import Player from "./Player";
 import CircularArray from "./CircularArray";
+import EndGameModal from "./EndGameModal";
 
 class Game {
     drawables: Drawable[] = [];
@@ -55,7 +56,8 @@ class Game {
 
     winCheck(): void {
         if (this.board.checkConnectFour()) {
-            alert("O jogador" + this.actualPlayer.color);
+            const modal = new EndGameModal(Colors.BLUE);
+            modal.show();
         }
     }
 
