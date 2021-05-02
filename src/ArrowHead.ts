@@ -15,7 +15,6 @@ class ArrowHead implements Drawable {
         this.size = size;
         this.position = position;
         this.arrowPositions = arrowPositions;
-        console.log(this);
     }
 
     static makeFromArrowPositions(arrowPositions: Coordinates[], size: number, color: Colors): ArrowHead {

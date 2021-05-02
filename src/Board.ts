@@ -25,7 +25,6 @@ export default class Board implements Drawable {
         };
 
         this.matrix = this.buildMatrix();
-        console.log(this);
     }
 
     draw(): void {
