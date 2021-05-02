@@ -51,19 +51,19 @@ class Game {
     }
 
     play(): void {
-        if (this.board.columnIsFull(this.arrow.actualPosition)) {
-            return;
-        }
-        this.arrow.changeColor(this.nextPlayer.color);
+        if (this.board.columnIsFull(this.arrow.actualPosition)) return;
         this.placeDisc(this.arrow.actualPosition, this.actualPlayer.color);
         this.winCheck();
+
+        this.arrow.changeColor(this.nextPlayer.color);
         this.playerTurnIndex++;
     }
 
     winCheck(): void {
         if (!this.board.checkConnectFour()) return;
+        const winnerColor = this.actualPlayer.color;
         setTimeout(() => {
-            this.endGameModal.show(this.actualPlayer.color);
+            this.endGameModal.show(winnerColor);
         }, 200);
     }
 
