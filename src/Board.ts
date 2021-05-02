@@ -1,6 +1,7 @@
 import {Colors, Coordinates, Drawable} from "./types";
 import Disc from "./Disc";
 import {ctx} from "./canvasContext";
+import {getMatrixDiagonals, transposeMatrix} from "./util";
 
 export default class Board implements Drawable {
     color: Colors;
@@ -50,25 +51,27 @@ export default class Board implements Drawable {
     }
 
     checkConnectFour(): boolean {
-        const matrix_tanspose = this.matrix[0].map(
-            (item, i) => this.matrix.map(row => row[i])
-        );
+        const matrix_tanspose = getMatrixDiagonals(this.matrix);
+
+        const mainDiagonals = getMatrixDiagonals(this.matrix, 'primary');
+        const secondaryDiagonals = getMatrixDiagonals(this.matrix, 'secondary');
+        const diagonals = mainDiagonals.concat(secondaryDiagonals);
 
         return this.matrix.some((row: Disc[]) => this.checkArrayConnectFour(row)) ||
-            matrix_tanspose.some((column: Disc[]) => this.checkArrayConnectFour(column));
+            matrix_tanspose.some((column: Disc[]) => this.checkArrayConnectFour(column)) ||
+            diagonals.some((diagonal: Disc[]) => this.checkArrayConnectFour(diagonal));
     }
 
     checkArrayConnectFour(row: Disc[]): boolean {
         let counter = 0;
-        const similar = 4;
+        const similarNumber = 4;
+        if (row.length < similarNumber) return false;
 
         for (let i = 0; i < row.length; i++) {
+            if (counter === similarNumber - 1) return true;
+
             const actual: Disc = row[i];
             const next: Disc = row[i + 1];
-
-            if (counter === similar - 1) {
-                return true;
-            }
 
             if (actual.equals(next)) {
                 counter++;
