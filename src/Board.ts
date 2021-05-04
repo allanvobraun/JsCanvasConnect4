@@ -25,6 +25,7 @@ export default class Board implements Drawable {
         };
 
         this.matrix = this.buildMatrix();
+        console.log(this);
     }
 
     draw(): void {
@@ -45,12 +46,16 @@ export default class Board implements Drawable {
         }
     }
 
+    isFull(): boolean {
+        return this.matrix.every((row) => row.every((disc) => disc.isDirty));
+    }
+
     columnIsFull(columnIndex: number): boolean {
         return this.matrix[0][columnIndex].isDirty;
     }
 
     checkConnectFour(): boolean {
-        const matrix_tanspose = getMatrixDiagonals(this.matrix);
+        const matrix_tanspose = transposeMatrix(this.matrix);
 
         const mainDiagonals = getMatrixDiagonals(this.matrix, 'primary');
         const secondaryDiagonals = getMatrixDiagonals(this.matrix, 'secondary');

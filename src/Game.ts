@@ -53,6 +53,9 @@ class Game {
     play(): void {
         if (this.board.columnIsFull(this.arrow.actualPosition)) return;
         this.placeDisc(this.arrow.actualPosition, this.actualPlayer.color);
+        if (this.board.isFull()) {
+            alert("EMPATE");
+        }
         this.winCheck();
 
         this.arrow.changeColor(this.nextPlayer.color);
