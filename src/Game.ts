@@ -6,8 +6,8 @@ import Disc from "./Disc";
 import UpdateDrawEvent from "./UpdateDrawEvent";
 import Player from "./Player";
 import CircularArray from "./CircularArray";
-import EndGameModal from "./EndGameModal";
 import KeyboardHandler from "./KeyboardHandler";
+import {ModalFacade} from "./ModalFacade";
 
 class Game {
     drawables: Drawable[] = [];
@@ -20,7 +20,6 @@ class Game {
     arrowSize: number = 40;
     GAME_WIDTH: number = canvas.width;
     GAME_HEIGHT: number = canvas.height;
-    endGameModal: EndGameModal;
     keyboardHandler: KeyboardHandler;
 
     constructor() {
@@ -36,9 +35,6 @@ class Game {
         this.drawables.push(this.board);
         this.drawables.push(this.arrow);
 
-        this.endGameModal = new EndGameModal({
-            onOk: (param) => this.reset(),
-        });
         UpdateDrawEvent.listen(this.update.bind(this));
     }
 
@@ -53,10 +49,9 @@ class Game {
     play(): void {
         if (this.board.columnIsFull(this.arrow.actualPosition)) return;
         this.placeDisc(this.arrow.actualPosition, this.actualPlayer.color);
-        if (this.board.isFull()) {
-            alert("EMPATE");
-        }
+
         this.winCheck();
+        this.drawCheck();
 
         this.arrow.changeColor(this.nextPlayer.color);
         this.playerTurnIndex++;
@@ -65,9 +60,37 @@ class Game {
     winCheck(): void {
         if (!this.board.checkConnectFour()) return;
         const winnerColor = this.actualPlayer.color;
-        setTimeout(() => {
-            this.endGameModal.show(winnerColor);
-        }, 200);
+        this.showEndGameModal(winnerColor);
+    }
+
+    showEndGameModal(winnerColor: Colors): void {
+        ModalFacade.fire({
+            title: 'Fim de jogo',
+            message: `
+            Vencedor: &nbsp&nbsp
+            <span class="color-displayer" style="background-color: ${winnerColor}"></span>
+            `,
+            closeButtonText: 'Fechar',
+            okButtonText: 'Novo Jogo',
+            onOk: () => this.reset(),
+            delay: 200
+        });
+    }
+
+    showDrawModal(): void {
+        ModalFacade.fire({
+            title: 'Empatou!',
+            closeButtonText: 'Fechar',
+            okButtonText: 'Novo Jogo',
+            onOk: () => this.reset(),
+            delay: 200
+        });
+    }
+
+    drawCheck(): void {
+        if (this.playerTurnIndex >= this.board.totalDiscsCount - 1) {
+            this.showDrawModal();
+        }
     }
 
     reset(): void {

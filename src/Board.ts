@@ -28,6 +28,10 @@ export default class Board implements Drawable {
         console.log(this);
     }
 
+    get totalDiscsCount(): number {
+        return this.rowCount * this.columnCount;
+    }
+
     draw(): void {
         this.drawBoard();
         this.drawDiscs();

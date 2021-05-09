@@ -1,84 +1,33 @@
-import MicroModal from 'micromodal';
 import {Colors} from "./types";
+import {Modal, BaseModalOptions} from "./Modal";
 
-interface EndGameModalOptions {
-    modalId?: string;
-    title?: string;
-    message?: string;
-    onShow?: (modal?: HTMLElement) => void;
-    onClose?: (modal?: HTMLElement) => void;
-    onOk?: (endGameModal?: EndGameModal) => void;
-    okButtonText?: string;
-    closeButtonText?: string;
-}
 
-export class EndGameModal {
-    modalId: string = 'end-game-modal';
-    title: string = 'Fim de jogo';
-    message: string = 'Vencedor: ';
-    okButtonText: string = 'Novo Jogo';
-    closeButtonText: string = 'Fechar';
-    modalReference: HTMLElement;
+export class EndGameModal extends Modal {
 
-    constructor(options: EndGameModalOptions) {
-        this.modalId = options.modalId ?? this.modalId;
-        this.title = options.title ?? this.title;
-        this.message = options.message ?? this.message;
-        this.okButtonText = options.okButtonText ?? this.okButtonText;
-        this.closeButtonText = options.closeButtonText ?? this.closeButtonText;
-
-        this.modalReference = document.getElementById(this.modalId);
-        this.setTitle(this.title);
-        this.setOnOkHook(options.onOk);
-
-        MicroModal.init();
-    }
-
-    setContent(content: string): EndGameModal {
-        return this.setElement('.modal__content', content);
-    }
-
-    setTitle(title: string): EndGameModal {
-        return this.setElement('.modal__title', title);
-    }
-
-    setButtonsText(): EndGameModal {
-        return this.setElement('.modal__btn_ok', this.okButtonText)
-            .setElement('.modal__btn_close', this.closeButtonText);
-    }
-
-    setOnOkHook(hook: (endGameModal?: EndGameModal) => void): EndGameModal {
-        if (!hook) return this;
-        const okButton = this.modalReference.querySelector('.modal__btn_ok');
-
-        okButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            hook(this);
-        });
-        return this;
-    }
-
-    show(winnerColor: Colors): void {
+    showEndgame(winnerColor: Colors): void {
         this.buildContent(winnerColor);
-        MicroModal.show(this.modalId);
+        super.show();
     }
 
-    close(): void {
-        MicroModal.close(this.modalId);
+    protected init(options: BaseModalOptions): void {
+        super.init(options);
+
+        this.modalId = 'end-game-modal';
+        this.title = 'Fim de jogo';
+        this.message = 'Vencedor: ';
+        this.okButtonText = 'Novo Jogo';
+        this.closeButtonText = 'Fechar';
+        this.setOnOkHook(options.onOk);
+        this.setTitle(this.title);
     }
 
-    private setElement(elementClass: string, content: string): EndGameModal {
-        const modalContent = this.modalReference.querySelector(elementClass);
-        modalContent.innerHTML = content;
-        return this;
-    }
-
-    private buildContent(color: Colors): EndGameModal {
+    private buildContent(color: Colors): this {
         this.setButtonsText();
         const content = `
             ${this.message}&nbsp&nbsp
             <span class="color-displayer" style="background-color: ${color}"></span>
         `;
+
         return this.setContent(content);
     }
 }
