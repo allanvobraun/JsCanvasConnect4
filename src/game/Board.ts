@@ -1,7 +1,7 @@
-import {Colors, Coordinates, Drawable} from "./types";
+import {Colors, Coordinates, Drawable} from "@/types";
 import Disc from "./Disc";
 import {ctx} from "./canvasContext";
-import {getMatrixDiagonals, transposeMatrix} from "./util";
+import {getMatrixDiagonals, transposeMatrix} from "@/util/helpers";
 
 export default class Board implements Drawable {
     color: Colors;

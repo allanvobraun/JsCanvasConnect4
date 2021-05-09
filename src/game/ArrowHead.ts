@@ -1,5 +1,5 @@
-import {Colors, Coordinates, Drawable} from "./types";
-import {drawEquilateralTriangle} from "./util";
+import {Colors, Coordinates, Drawable} from "@/types";
+import {drawEquilateralTriangle} from "@/util/helpers";
 import UpdateDrawEvent from "./UpdateDrawEvent";
 
 

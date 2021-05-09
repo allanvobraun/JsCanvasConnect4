@@ -31,9 +31,14 @@
     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true,
     /* Disallow inconsistently-cased references to the same file. */
-    "allowSyntheticDefaultImports" : true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
-      "resources" :["./resources/*"]
+      "resources": [
+        "./resources/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
     }
   }
 }

@@ -25,6 +25,7 @@ module.exports = {
     extensions: ['.ts', '.js'],
     alias: {
       resources: path.resolve(__dirname, './resources'),
+      '@': path.resolve(__dirname, 'src'),
     },
   },
 

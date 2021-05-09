@@ -1,13 +1,13 @@
-import {Colors, Coordinates, Drawable} from "./types";
+import {Colors, Coordinates, Drawable} from "@/types";
 import {canvas, ctx} from "./canvasContext";
 import Board from "./Board";
 import ArrowHead from "./ArrowHead";
 import Disc from "./Disc";
 import UpdateDrawEvent from "./UpdateDrawEvent";
 import Player from "./Player";
-import CircularArray from "./CircularArray";
+import CircularArray from "@/util/CircularArray";
 import KeyboardHandler from "./KeyboardHandler";
-import {ModalFacade} from "./ModalFacade";
+import {ModalFacade} from "@/util/ModalFacade";
 
 class Game {
     drawables: Drawable[] = [];

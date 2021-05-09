@@ -1,5 +1,5 @@
-import {Colors, Coordinates} from "./types";
-import {ctx} from "./canvasContext";
+import {Colors, Coordinates} from "@/types";
+import {ctx} from "@/game/canvasContext";
 
 export function drawEquilateralTriangle(
     coordinate: Coordinates,

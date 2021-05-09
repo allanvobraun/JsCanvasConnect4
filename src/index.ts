@@ -1,6 +1,6 @@
-import Game from "./Game";
-import GameController from "./GameController";
-import KeyboardHandler from "./KeyboardHandler";
+import Game from "@/game/Game";
+import GameController from "@/game/GameController";
+import KeyboardHandler from "@/game/KeyboardHandler";
 import 'resources/css/index.css';
 
 window.onload = () => {

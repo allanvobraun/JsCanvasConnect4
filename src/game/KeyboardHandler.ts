@@ -1,5 +1,5 @@
 import GameController from "./GameController";
-import {canvas} from "./canvasContext";
+import {canvas} from "@/game/canvasContext";
 
 class KeyboardHandler {
     controller: GameController;

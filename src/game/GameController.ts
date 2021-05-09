@@ -1,4 +1,4 @@
-import Game from "./Game";
+import Game from "@/game/Game";
 
 class GameController {
     game: Game;

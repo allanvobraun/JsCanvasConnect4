@@ -1,4 +1,4 @@
-import {Colors, Coordinates, Drawable} from "./types";
+import {Colors, Coordinates, Drawable} from "@/types";
 import {ctx} from "./canvasContext";
 import UpdateDrawEvent from "./UpdateDrawEvent";
 
