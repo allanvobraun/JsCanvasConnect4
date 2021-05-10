@@ -1,5 +1,6 @@
 import {Colors, Coordinates} from "@/types";
 import {ctx} from "@/game/canvasContext";
+import Disc from "@/game/Disc";
 
 export function drawEquilateralTriangle(
     coordinate: Coordinates,
@@ -59,4 +60,19 @@ export function getMatrixDiagonals<T>(matrix: T[][], diagonalType: diagonalsType
         newMatrix.push(diagonal);
     }
     return newMatrix;
+}
+
+export function discArrayEquals(array1: Disc[], array2: Disc[]): boolean {
+    if (array1.length !== array2.length) return false;
+    if (array1.length === 0) return true;
+    return array1.every((item, index) => item.equals(array2[index]));
+}
+
+export function isDiscSubArray(array1: Disc[], array2: Disc[]): boolean {
+    for (let i = 0; i < array1.length; i++) {
+        if (discArrayEquals(array1.slice(i, i + array2.length), array2)) {
+            return true;
+        }
+    }
+    return false;
 }

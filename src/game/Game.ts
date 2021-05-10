@@ -22,8 +22,10 @@ class Game {
     GAME_HEIGHT: number = canvas.height;
     keyboardHandler: KeyboardHandler;
 
-    constructor() {
+    constructor(players: Player[]) {
         this.board = new Board(this.GAME_WIDTH, this.GAME_HEIGHT, Colors.BOARD);
+        this.players = new CircularArray<Player>(players);
+
         this.players = new CircularArray<Player>([
             new Player('MIN', Colors.RED),
             new Player('MAX', Colors.SHREK),
