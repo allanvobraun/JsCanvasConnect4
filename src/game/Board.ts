@@ -13,6 +13,7 @@ export default class Board implements Drawable {
     columnCount: number = 7;
     boardMargin: number = 20;
     discMargin: number = 15;
+    dirtyDiscCount: number = 0;
 
     constructor(gameWidth: number, gameHeight: number, color: Colors) {
         this.height = gameHeight - 60;
@@ -25,7 +26,6 @@ export default class Board implements Drawable {
         };
 
         this.matrix = this.buildMatrix();
-        console.log(this);
     }
 
     get totalDiscsCount(): number {
@@ -50,8 +50,20 @@ export default class Board implements Drawable {
         }
     }
 
+    placeDisc(columnIndex: number, color: Colors): void {
+        for (let i = this.rowCount; i--;) {
+            const row = this.matrix[i];
+            const disc: Disc = row[columnIndex];
+            if (!disc.isDirty) {
+                disc.changeColor(color);
+                this.dirtyDiscCount++;
+                break;
+            }
+        }
+    }
+
     isFull(): boolean {
-        return this.matrix.every((row) => row.every((disc) => disc.isDirty));
+        return this.dirtyDiscCount === this.totalDiscsCount;
     }
 
     columnIsFull(columnIndex: number): boolean {

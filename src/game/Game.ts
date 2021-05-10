@@ -48,7 +48,7 @@ class Game {
 
     play(): void {
         if (this.board.columnIsFull(this.arrow.actualPosition)) return;
-        this.placeDisc(this.arrow.actualPosition, this.actualPlayer.color);
+        this.board.placeDisc(this.arrow.actualPosition, this.actualPlayer.color);
 
         this.winCheck();
         this.drawCheck();
@@ -88,24 +88,13 @@ class Game {
     }
 
     drawCheck(): void {
-        if (this.playerTurnIndex >= this.board.totalDiscsCount - 1) {
+        if (this.board.isFull()) {
             this.showDrawModal();
         }
     }
 
     reset(): void {
         location.reload();
-    }
-
-    placeDisc(columnIndex: number, color: Colors): void {
-        for (let i = this.board.rowCount; i--;) {
-            const row = this.board.matrix[i];
-            const disc: Disc = row[columnIndex];
-            if (!disc.isDirty) {
-                disc.changeColor(color);
-                break;
-            }
-        }
     }
 
     getArrowPositions(): Coordinates[] {
