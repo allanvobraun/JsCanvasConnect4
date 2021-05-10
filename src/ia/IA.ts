@@ -37,7 +37,7 @@ class IA {
         return [
             {
                 discs: [iaDisc, iaDisc, iaDisc, iaDisc],
-                points: 100
+                points: Number.POSITIVE_INFINITY
             },
             {
                 discs: [iaDisc, iaDisc, iaDisc, emptyDisc],
@@ -77,7 +77,15 @@ class IA {
             },
             {
                 discs: [opponentDisc, opponentDisc, opponentDisc, opponentDisc],
-                points: -101
+                points: Number.NEGATIVE_INFINITY
+            },
+            {
+                discs: [opponentDisc],
+                points: 10
+            },
+            {
+                discs: [iaDisc],
+                points: 10
             },
         ];
     }
@@ -105,7 +113,7 @@ class IA {
 
     possibleColumnsToMove(board: Board): number[] {
         const columnsIndexes: number[] = [];
-        for (let i = 1; i < board.rowCount + 1; i++) {
+        for (let i = 0; i < board.columnCount; i++) {
             if (!board.columnIsFull(i)) {
                 columnsIndexes.push(i);
             }
@@ -113,30 +121,30 @@ class IA {
         return columnsIndexes;
     }
 
-    showBestPlay(): void {
-        console.log(this.minimax(this.game.board, 1, true));
+    showBestPlay(depht: number = 1): void {
+        console.log(this.minimax(this.game.board, depht, 0, true));
     }
 
-    minimax(board: Board, depth: number, maximizingPlayer: boolean): ScorePosition {
+    minimax(board: Board, depth: number, position: number, maximizingPlayer: boolean): ScorePosition {
         if (depth === 0 || this.isTerminalNode(board)) {
-            return {score: this.rateBoard(board), position: null};
+            return {score: this.rateBoard(board), position};
         }
         if (maximizingPlayer) {
-            let pivotScore: ScorePosition = {score: Number.NEGATIVE_INFINITY, position: null};
+            let pivotScore: ScorePosition = {score: Number.NEGATIVE_INFINITY, position};
             for (const moveIndex of this.possibleColumnsToMove(board)) {
                 const boardCopy = cloneDeep(board);
                 boardCopy.placeDisc(moveIndex, this.player.color);
-                const minimax = this.minimax(boardCopy, depth - 1, false);
+                const minimax = this.minimax(boardCopy, depth - 1, moveIndex, false);
                 pivotScore = this.chooseNewScore(pivotScore, minimax, Math.max);
             }
             return pivotScore;
         } else {
-            let pivotScore: ScorePosition = {score: Number.NEGATIVE_INFINITY, position: null};
+            let pivotScore: ScorePosition = {score: Number.POSITIVE_INFINITY, position};
 
             for (const moveIndex of this.possibleColumnsToMove(board)) {
                 const boardCopy = cloneDeep(board);
                 boardCopy.placeDisc(moveIndex, this.player.color);
-                const minimax = this.minimax(boardCopy, depth - 1, true);
+                const minimax = this.minimax(boardCopy, depth - 1, moveIndex, true);
                 pivotScore = this.chooseNewScore(pivotScore, minimax, Math.min);
             }
             return pivotScore;
@@ -151,4 +159,5 @@ class IA {
         return actual;
     }
 }
+
 export default IA;

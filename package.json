@@ -8,6 +8,7 @@
   "scripts": {
     "build-dev": "webpack --mode development",
     "prod": "webpack --mode production",
+    "wach": "webpack --watch --mode development",
     "hot": "webpack serve --hot --mode development"
   },
   "dependencies": {

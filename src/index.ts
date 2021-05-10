@@ -16,5 +16,6 @@ window.onload = () => {
     game.keyboardHandler = new KeyboardHandler(controller);
     game.run();
     const robo = new IA(players[1], players[0], game);
+    (window as any).robo = robo;
     console.log(robo);
 };
