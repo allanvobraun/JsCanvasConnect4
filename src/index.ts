@@ -4,12 +4,12 @@ import KeyboardHandler from "@/game/KeyboardHandler";
 import IA from '@/ia/IA';
 import 'resources/css/index.css';
 import Player from "@/game/Player";
-import {Colors} from "@/types";
+import {Colors, Piece} from "@/types";
 
 window.onload = () => {
     const players = [
-        new Player('MIN', Colors.RED),
-        new Player('MAX', Colors.SHREK),
+        new Player('MIN', Colors.RED, Piece.P1),
+        new Player('MAX', Colors.SHREK, Piece.P2),
     ];
     const game = new Game(players);
     const controller = new GameController(game);

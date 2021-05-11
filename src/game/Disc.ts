@@ -1,4 +1,4 @@
-import {Colors, Coordinates, Drawable} from "@/types";
+import {Colors, Coordinates, Drawable, MatrixCoordinates} from "@/types";
 import {ctx} from "./canvasContext";
 import UpdateDrawEvent from "./UpdateDrawEvent";
 
@@ -7,11 +7,13 @@ class Disc implements Drawable {
     diameter: number;
     color: Colors;
     isDirty: boolean = false;
+    matrixAddress: MatrixCoordinates;
 
-    constructor(position: Coordinates, diameter: number, color: Colors) {
+    constructor(position: Coordinates, diameter: number, color: Colors, matrixAddress: MatrixCoordinates) {
         this.color = color;
         this.diameter = diameter;
         this.position = position;
+        this.matrixAddress = matrixAddress;
     }
 
     changeColor(color: Colors): void {

@@ -62,17 +62,21 @@ export function getMatrixDiagonals<T>(matrix: T[][], diagonalType: diagonalsType
     return newMatrix;
 }
 
-export function discArrayEquals(array1: Disc[], array2: Disc[]): boolean {
+export function arrayEquals(array1: number[], array2: number[]): boolean {
     if (array1.length !== array2.length) return false;
     if (array1.length === 0) return true;
-    return array1.every((item, index) => item.equals(array2[index]));
+    return array1.every((item, index) => item === array2[index]);
 }
 
-export function isDiscSubArray(array1: Disc[], array2: Disc[]): boolean {
+export function isSubArray(array1: number[], array2: number[]): boolean {
     for (let i = 0; i < array1.length; i++) {
-        if (discArrayEquals(array1.slice(i, i + array2.length), array2)) {
+        if (arrayEquals(array1.slice(i, i + array2.length), array2)) {
             return true;
         }
     }
     return false;
+}
+
+export function buildRepeatedArray<T>(item: T, length: number): T[] {
+    return Array.from({length}, (_, i) => item);
 }

@@ -1,4 +1,4 @@
-import {Colors, Coordinates, Drawable} from "@/types";
+import {Colors, Coordinates, Drawable, Piece} from "@/types";
 import {canvas, ctx} from "./canvasContext";
 import Board from "./Board";
 import ArrowHead from "./ArrowHead";
@@ -26,11 +26,6 @@ class Game {
         this.board = new Board(this.GAME_WIDTH, this.GAME_HEIGHT, Colors.BOARD);
         this.players = new CircularArray<Player>(players);
 
-        this.players = new CircularArray<Player>([
-            new Player('MIN', Colors.RED),
-            new Player('MAX', Colors.SHREK),
-        ]);
-
         this.arrowPositions = this.getArrowPositions();
         this.arrow = ArrowHead.makeFromArrowPositions(this.arrowPositions, this.arrowSize, this.actualPlayer.color);
 
@@ -50,7 +45,7 @@ class Game {
 
     play(): void {
         if (this.board.columnIsFull(this.arrow.actualPosition)) return;
-        this.board.placeDisc(this.arrow.actualPosition, this.actualPlayer.color);
+        this.board.placeDisc(this.arrow.actualPosition, this.actualPlayer);
 
         this.winCheck();
         this.drawCheck();
@@ -100,7 +95,8 @@ class Game {
     }
 
     getArrowPositions(): Coordinates[] {
-        return this.board.matrix[0].map((disc: Disc): Coordinates => {
+        const topDiscs = this.board.discs.slice(0, this.board.columnCount);
+        return topDiscs.map((disc: Disc): Coordinates => {
             return {
                 x: disc.position.x - this.arrowSize / 2,
                 y: disc.position.y - this.arrowPositionHeight

@@ -1,17 +1,14 @@
-import {Colors} from "@/types";
-import Disc from "@/game/Disc";
+import {Colors, Piece} from "@/types";
 
 class Player {
     name: string;
     color: Colors;
+    pieceValue: Piece;
 
-    constructor(name: string, color: Colors) {
+    constructor(name: string, color: Colors, pieceValue: Piece) {
         this.name = name;
         this.color = color;
-    }
-
-    isPlayerDisc(disc: Disc): boolean {
-        return disc.color === this.color;
+        this.pieceValue = pieceValue;
     }
 }
 
