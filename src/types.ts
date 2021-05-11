@@ -29,7 +29,7 @@ export interface MatrixCoordinates {
 }
 
 export interface BoardConfiguration {
-    discs: Disc[];
+    pieces: number[];
     points: number;
 }
 

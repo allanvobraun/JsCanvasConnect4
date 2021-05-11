@@ -6,7 +6,6 @@ class Disc implements Drawable {
     position: Coordinates;
     diameter: number;
     color: Colors;
-    isDirty: boolean = false;
     matrixAddress: MatrixCoordinates;
 
     constructor(position: Coordinates, diameter: number, color: Colors, matrixAddress: MatrixCoordinates) {
@@ -18,7 +17,6 @@ class Disc implements Drawable {
 
     changeColor(color: Colors): void {
         this.color = color;
-        this.isDirty = true;
         UpdateDrawEvent.fire();
     }
 
@@ -27,10 +25,6 @@ class Disc implements Drawable {
         ctx.arc(this.position.x, this.position.y, this.diameter / 2, 0, 2 * Math.PI, false);
         ctx.fillStyle = this.color;
         ctx.fill();
-    }
-
-    equals(other: Disc): boolean {
-        return this.color === other?.color && this.isDirty;
     }
 }
 
