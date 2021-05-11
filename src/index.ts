@@ -8,8 +8,8 @@ import {Colors, Piece} from "@/types";
 
 window.onload = () => {
     const players = [
-        new Player('MIN', Colors.RED, Piece.P1),
-        new Player('MAX', Colors.SHREK, Piece.P2),
+        new Player('MIN', Colors.RED, Piece.P2),
+        new Player('MAX', Colors.SHREK, Piece.P1),
     ];
     const game = new Game(players);
     const controller = new GameController(game);

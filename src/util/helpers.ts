@@ -80,3 +80,8 @@ export function isSubArray(array1: number[], array2: number[]): boolean {
 export function buildRepeatedArray<T>(item: T, length: number): T[] {
     return Array.from({length}, (_, i) => item);
 }
+
+export function randomChoice<T>(choices: T[]): T {
+    const index = Math.floor(Math.random() * choices.length);
+    return choices[index];
+}
