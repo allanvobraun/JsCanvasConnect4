@@ -37,37 +37,29 @@ class BoardConfigurationFactory {
                 pieces: [emptyPiece, iaPiece, iaPiece, emptyPiece, emptyPiece],
                 points: 3
             },
+            // {
+            //     pieces: [iaPiece, iaPiece, emptyPiece],
+            //     points: 2
+            // },
+            // {
+            //     pieces: [emptyPiece, iaPiece, iaPiece],
+            //     points: 2
+            // },
+            // {
+            //     pieces: [emptyPiece, emptyPiece, iaPiece, emptyPiece, emptyPiece],
+            //     points: 1
+            // },
             {
-                pieces: [iaPiece, iaPiece, emptyPiece],
-                points: 2
-            },
-            {
-                pieces: [emptyPiece, iaPiece, iaPiece],
-                points: 2
-            },
-            {
-                pieces: [emptyPiece, emptyPiece, iaPiece, emptyPiece, emptyPiece],
-                points: 1
-            },
-            {
-                pieces: [emptyPiece, opponentPiece, opponentPiece, emptyPiece],
+                pieces: [emptyPiece, emptyPiece, opponentPiece, opponentPiece, emptyPiece, emptyPiece],
                 points: -1
             },
             {
                 pieces: [opponentPiece, opponentPiece, opponentPiece, emptyPiece],
-                points: -4
+                points: -10
             },
             {
                 pieces: [emptyPiece, opponentPiece, opponentPiece, opponentPiece],
-                points: -4
-            },
-            {
-                pieces: [opponentPiece],
-                points: 0
-            },
-            {
-                pieces: [iaPiece],
-                points: 0
+                points: -10
             },
         ];
 

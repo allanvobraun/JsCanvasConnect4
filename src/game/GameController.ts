@@ -15,8 +15,8 @@ class GameController {
         this.game.arrow.moveRight();
     }
 
-    playerMove(): void {
-        this.game.play();
+    playerMove(discPosition?: number): void {
+        this.game.play(discPosition);
     }
 }
 

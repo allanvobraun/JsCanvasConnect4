@@ -1,4 +1,4 @@
-import {Colors, Coordinates, Drawable, Piece} from "@/types";
+import {Colors, Coordinates, Drawable} from "@/types";
 import {canvas, ctx} from "./canvasContext";
 import Board from "./Board";
 import ArrowHead from "./ArrowHead";
@@ -43,15 +43,19 @@ class Game {
         return this.players.get(this.playerTurnIndex + 1);
     }
 
-    play(): void {
+    play(discPosition?: number): void {
         if (this.board.columnIsFull(this.arrow.actualPosition)) return;
-        this.board.placeDisc(this.arrow.actualPosition, this.actualPlayer);
+        this.board.placeDisc(discPosition ?? this.arrow.actualPosition, this.actualPlayer);
 
         this.winCheck();
         this.drawCheck();
 
         this.arrow.changeColor(this.nextPlayer.color);
         this.playerTurnIndex++;
+
+        window.dispatchEvent(new CustomEvent<Player>('fim-jogada', {
+            detail: this.actualPlayer
+        }));
     }
 
     winCheck(): void {

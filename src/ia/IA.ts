@@ -1,9 +1,9 @@
 import Player from "@/game/Player";
 import Board from "@/game/Board";
-import {isSubArray, transposeMatrix} from "@/util/helpers";
+import {buildRepeatedArray, isSubArray, transposeMatrix} from "@/util/helpers";
 import Game from "@/game/Game";
 import cloneDeep from "lodash.clonedeep";
-import {BoardConfiguration} from "@/types";
+import {BoardConfiguration, Colors, Piece} from "@/types";
 import BoardConfigurationFactory from "@/ia/BoardConfigurationFactory";
 
 interface ScorePosition {
@@ -25,8 +25,19 @@ class IA {
 
         this.configurations = BoardConfigurationFactory.buildNormalConfigurations(this.player, this.opponent);
         this.winConfiguration = BoardConfigurationFactory.buildWinConfigurations(this.player, this.opponent);
+
+        window.addEventListener('fim-jogada', ((event: CustomEvent) => {
+            if (event.detail === this.player) {
+                this.play();
+            }
+        }) as EventListener);
     }
 
+    play(): void {
+        console.log("A IA VAI JOGAR");
+        const jogada = this.getBestPlay(2);
+        this.game.play(jogada.position);
+    }
 
     rateBoard(board: Board): number {
         const locatedConfigurations: BoardConfiguration[] = [];
@@ -43,7 +54,11 @@ class IA {
         }
 
         for (const column of matrix_tanspose) {
-            const winConfiguration = this.winConfiguration.find((winConfig) => isSubArray(column, winConfig.pieces));
+            if (isSubArray(column, buildRepeatedArray(Piece.EMPTY, 6))) continue;
+            const winConfiguration = this.winConfiguration.find((winConfig) => {
+                return isSubArray(column, winConfig.pieces);
+            });
+            console.log(winConfiguration);
             if (winConfiguration) {
                 return winConfiguration.points;
             }
@@ -51,11 +66,15 @@ class IA {
             locatedConfigurations.push(...locatedConfigurationsInColumn);
         }
 
+        if (locatedConfigurations.length === 0) {
+            return 0;
+        }
+
         return locatedConfigurations.reduce((acc, config) => config.points + acc, 0);
     }
 
     isTerminalNode(board: Board): boolean {
-        return board.isFull();
+        return board.isFull() || board.checkConnectFour();
     }
 
     possibleColumnsToMove(board: Board): number[] {
@@ -68,8 +87,21 @@ class IA {
         return columnsIndexes;
     }
 
-    showBestPlay(depht: number = 1): void {
-        console.log(this.minimax(this.game.board, depht, 0, true));
+    getBestPlay(depht: number = 1): ScorePosition {
+        return this.minimax(this.game.board, depht, null, true);
+    }
+
+    testMinMax(): void {
+        const board = new Board(0, 0, Colors.BLUE);
+        board.matrix = [
+            [0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0],
+            [2, 0, 0, 0, 0, 0, 0],
+            [2, 0, 0, 0, 0, 0, 1],
+            [2, 2, 0, 0, 0, 0, 1],
+            [1, 2, 0, 0, 0, 0, 1],
+        ];
+        console.log(this.minimax(board, 5, 0, true));
     }
 
     minimax(board: Board, depth: number, position: number, maximizingPlayer: boolean): ScorePosition {
@@ -78,6 +110,7 @@ class IA {
         }
         if (maximizingPlayer) {
             let pivotScore: ScorePosition = {score: Number.NEGATIVE_INFINITY, position};
+
             for (const moveIndex of this.possibleColumnsToMove(board)) {
                 const boardCopy = cloneDeep(board);
                 boardCopy.placeDisc(moveIndex, this.player);
@@ -90,7 +123,7 @@ class IA {
 
             for (const moveIndex of this.possibleColumnsToMove(board)) {
                 const boardCopy = cloneDeep(board);
-                boardCopy.placeDisc(moveIndex, this.player);
+                boardCopy.placeDisc(moveIndex, this.opponent);
                 const minimax = this.minimax(boardCopy, depth - 1, moveIndex, true);
                 pivotScore = this.chooseNewScore(pivotScore, minimax, Math.min);
             }
@@ -99,6 +132,9 @@ class IA {
     }
 
     chooseNewScore(old: ScorePosition, actual: ScorePosition, criterion: (a: number, b: number) => number): ScorePosition {
+        if (old.score === actual.score) {
+            return old.position === null ? actual: old;
+        }
         const value = criterion(old.score, actual.score);
         if (value === old.score) {
             return old;
