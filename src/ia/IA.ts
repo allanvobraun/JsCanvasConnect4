@@ -1,9 +1,9 @@
 import Player from "@/game/Player";
 import Board from "@/game/Board";
-import {buildRepeatedArray, isSubArray, randomChoice, transposeMatrix} from "@/util/helpers";
+import {buildRepeatedArray, isSubArray, transposeMatrix} from "@/util/helpers";
 import Game from "@/game/Game";
 import cloneDeep from "lodash.clonedeep";
-import {BoardConfiguration, Piece} from "@/types";
+import {BoardConfiguration, Colors, Piece} from "@/types";
 import BoardConfigurationFactory from "@/ia/BoardConfigurationFactory";
 
 interface ScorePosition {
@@ -35,7 +35,7 @@ class IA {
 
     play(): void {
         console.log("A IA VAI JOGAR");
-        const jogada = this.getBestPlay(4);
+        const jogada = this.getBestPlay(2);
         this.game.play(jogada.position);
     }
 
@@ -58,6 +58,7 @@ class IA {
             const winConfiguration = this.winConfiguration.find((winConfig) => {
                 return isSubArray(column, winConfig.pieces);
             });
+            console.log(winConfiguration);
             if (winConfiguration) {
                 return winConfiguration.points;
             }
@@ -90,64 +91,49 @@ class IA {
         return this.minimax(this.game.board, depht, null, true);
     }
 
-    minimax(
-        board: Board,
-        depth: number,
-        position: number,
-        maximizingPlayer: boolean,
-        alpha: number = Number.NEGATIVE_INFINITY,
-        beta: number = Number.POSITIVE_INFINITY
-    ): ScorePosition {
+    testMinMax(): void {
+        const board = new Board(0, 0, Colors.BLUE);
+        board.matrix = [
+            [0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0],
+            [2, 0, 0, 0, 0, 0, 0],
+            [2, 0, 0, 0, 0, 0, 1],
+            [2, 2, 0, 0, 0, 0, 1],
+            [1, 2, 0, 0, 0, 0, 1],
+        ];
+        console.log(this.minimax(board, 5, 0, true));
+    }
 
+    minimax(board: Board, depth: number, position: number, maximizingPlayer: boolean): ScorePosition {
         if (depth === 0 || this.isTerminalNode(board)) {
             return {score: this.rateBoard(board), position};
         }
         if (maximizingPlayer) {
-            let pivotScore = Number.NEGATIVE_INFINITY;
-            const colunasPossiveis = this.possibleColumnsToMove(board);
-            let column = randomChoice(colunasPossiveis);
+            let pivotScore: ScorePosition = {score: Number.NEGATIVE_INFINITY, position};
 
-            for (const moveIndex of colunasPossiveis) {
-
+            for (const moveIndex of this.possibleColumnsToMove(board)) {
                 const boardCopy = cloneDeep(board);
                 boardCopy.placeDisc(moveIndex, this.player);
                 const minimax = this.minimax(boardCopy, depth - 1, moveIndex, false);
-                if (minimax.score > pivotScore) {
-                    pivotScore = minimax.score;
-                    column = minimax.position;
-                }
-                alpha = Math.max(alpha, pivotScore);
-                if (alpha >= beta) {
-                    break;
-                }
+                pivotScore = this.chooseNewScore(pivotScore, minimax, Math.max);
             }
-            return {score: pivotScore, position: column};
-
+            return pivotScore;
         } else {
-            let pivotScore = Number.POSITIVE_INFINITY;
-            const colunasPossiveis = this.possibleColumnsToMove(board);
-            let column = randomChoice(colunasPossiveis);
+            let pivotScore: ScorePosition = {score: Number.POSITIVE_INFINITY, position};
 
-            for (const moveIndex of colunasPossiveis) {
+            for (const moveIndex of this.possibleColumnsToMove(board)) {
                 const boardCopy = cloneDeep(board);
                 boardCopy.placeDisc(moveIndex, this.opponent);
                 const minimax = this.minimax(boardCopy, depth - 1, moveIndex, true);
-                if (minimax.score < pivotScore) {
-                    pivotScore = minimax.score;
-                    column = minimax.position;
-                }
-                beta = Math.min(beta, pivotScore);
-                if (alpha >= beta) {
-                    break;
-                }
+                pivotScore = this.chooseNewScore(pivotScore, minimax, Math.min);
             }
-            return {score: pivotScore, position: column};
+            return pivotScore;
         }
     }
 
     chooseNewScore(old: ScorePosition, actual: ScorePosition, criterion: (a: number, b: number) => number): ScorePosition {
         if (old.score === actual.score) {
-            return old.position === null ? actual : old;
+            return old.position === null ? actual: old;
         }
         const value = criterion(old.score, actual.score);
         if (value === old.score) {
