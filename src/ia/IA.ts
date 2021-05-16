@@ -34,7 +34,6 @@ class IA {
     }
 
     play(): void {
-        console.log("A IA VAI JOGAR");
         const jogada = this.getBestPlay(2);
         this.game.play(jogada.position);
     }
@@ -99,47 +98,51 @@ class IA {
     }
 
     getBestPlay(depht: number = 1): ScorePosition {
-        return this.minimax(this.game.board, depht, null, true);
+        return this.alphaBetaSearch(this.game.board, depht, null);
     }
 
-    testMinMax(): void {
-        const board = new Board(0, 0, Colors.BLUE);
-        board.matrix = [
-            [2, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0],
-            [2, 0, 0, 0, 0, 0, 0],
-            [2, 0, 0, 0, 0, 0, 1],
-            [2, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 1],
-        ];
-        console.log(this.minimax(board, 2, 0, true));
+    alphaBetaSearch(board: Board, depth: number, position: number): ScorePosition {
+        return this.maximazing(board, depth, position, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
     }
 
-    minimax(board: Board, depth: number, position: number, maximizingPlayer: boolean): ScorePosition {
+    maximazing(board: Board, depth: number, position: number, alpha: number, beta: number): ScorePosition {
         if (depth === 0 || this.isTerminalNode(board)) {
             return {score: this.rateBoard(board), position};
         }
-        if (maximizingPlayer) {
-            let pivotScore: ScorePosition = {score: Number.NEGATIVE_INFINITY, position: null};
+        let pivotScore: ScorePosition = {score: Number.NEGATIVE_INFINITY, position: null};
 
-            for (const moveIndex of this.possibleColumnsToMove(board)) {
-                const boardCopy = cloneDeep(board);
-                boardCopy.placeDisc(moveIndex, this.player);
-                const minimax = this.minimax(boardCopy, depth - 1, moveIndex, false);
-                pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.max);
-            }
-            return pivotScore;
-        } else {
-            let pivotScore: ScorePosition = {score: Number.POSITIVE_INFINITY, position: null};
+        for (const moveIndex of this.possibleColumnsToMove(board)) {
+            const boardCopy = cloneDeep(board);
+            boardCopy.placeDisc(moveIndex, this.player);
 
-            for (const moveIndex of this.possibleColumnsToMove(board)) {
-                const boardCopy = cloneDeep(board);
-                boardCopy.placeDisc(moveIndex, this.opponent);
-                const minimax = this.minimax(boardCopy, depth - 1, moveIndex, true);
-                pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.min);
-            }
-            return pivotScore;
+            const minimax = this.minimizing(boardCopy, depth - 1, moveIndex, alpha, beta);
+            pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.max);
+
+            if (pivotScore.score >= beta) return pivotScore;
+
+            alpha = Math.max(alpha, pivotScore.score);
         }
+        return pivotScore;
+    }
+
+    minimizing(board: Board, depth: number, position: number, alpha: number, beta: number): ScorePosition {
+        if (depth === 0 || this.isTerminalNode(board)) {
+            return {score: this.rateBoard(board), position};
+        }
+        let pivotScore: ScorePosition = {score: Number.POSITIVE_INFINITY, position: null};
+
+        for (const moveIndex of this.possibleColumnsToMove(board)) {
+            const boardCopy = cloneDeep(board);
+            boardCopy.placeDisc(moveIndex, this.player);
+
+            const minimax = this.maximazing(boardCopy, depth - 1, moveIndex, alpha, beta);
+            pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.min);
+
+            if (pivotScore.score <= alpha) return pivotScore;
+
+            beta = Math.min(alpha, pivotScore.score);
+        }
+        return pivotScore;
     }
 
     chooseNewScore(old: ScorePosition, actual: ScorePosition, criterion: (a: number, b: number) => number): ScorePosition {
