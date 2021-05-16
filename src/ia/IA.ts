@@ -1,6 +1,6 @@
 import Player from "@/game/Player";
 import Board from "@/game/Board";
-import {buildRepeatedArray, isSubArray, transposeMatrix} from "@/util/helpers";
+import {buildRepeatedArray, getAllMatrixDiagonals, isSubArray, transposeMatrix} from "@/util/helpers";
 import Game from "@/game/Game";
 import cloneDeep from "lodash.clonedeep";
 import {BoardConfiguration, Colors, Piece} from "@/types";
@@ -35,7 +35,7 @@ class IA {
 
     play(): void {
         console.log("A IA VAI JOGAR");
-        const jogada = this.getBestPlay(4);
+        const jogada = this.getBestPlay(2);
         this.game.play(jogada.position);
     }
 
@@ -48,7 +48,6 @@ class IA {
             if (winConfiguration) {
                 return winConfiguration.points;
             }
-
             const locatedConfigurationsInRow = this.configurations.filter((configuration) => isSubArray(row, configuration.pieces));
             locatedConfigurations.push(...locatedConfigurationsInRow);
         }
@@ -58,7 +57,6 @@ class IA {
             const winConfiguration = this.winConfiguration.find((winConfig) => {
                 return isSubArray(column, winConfig.pieces);
             });
-            console.log(winConfiguration);
             if (winConfiguration) {
                 return winConfiguration.points;
             }
@@ -66,16 +64,16 @@ class IA {
             locatedConfigurations.push(...locatedConfigurationsInColumn);
         }
 
-        for (const column of matrix_tanspose) {
-            if (isSubArray(column, buildRepeatedArray(Piece.EMPTY, 6))) continue;
+        const matrixDiagonals = getAllMatrixDiagonals(board.matrix);
+        for (const diagonal of matrixDiagonals) {
+            if (isSubArray(diagonal, buildRepeatedArray(Piece.EMPTY, 6))) continue;
             const winConfiguration = this.winConfiguration.find((winConfig) => {
-                return isSubArray(column, winConfig.pieces);
+                return isSubArray(diagonal, winConfig.pieces);
             });
-            console.log(winConfiguration);
             if (winConfiguration) {
                 return winConfiguration.points;
             }
-            const locatedConfigurationsInColumn = this.configurations.filter((configuration) => isSubArray(column, configuration.pieces));
+            const locatedConfigurationsInColumn = this.configurations.filter((configuration) => isSubArray(diagonal, configuration.pieces));
             locatedConfigurations.push(...locatedConfigurationsInColumn);
         }
 
@@ -114,7 +112,7 @@ class IA {
             [2, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 1],
         ];
-        console.log(this.minimax(board,2, 0, true));
+        console.log(this.minimax(board, 2, 0, true));
     }
 
     minimax(board: Board, depth: number, position: number, maximizingPlayer: boolean): ScorePosition {
@@ -146,7 +144,7 @@ class IA {
 
     chooseNewScore(old: ScorePosition, actual: ScorePosition, criterion: (a: number, b: number) => number): ScorePosition {
         if (old.score === actual.score) {
-            return old.position === null ? actual: old;
+            return old.position === null ? actual : old;
         }
         const value = criterion(old.score, actual.score);
         if (value === old.score) {

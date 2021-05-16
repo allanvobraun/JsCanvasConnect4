@@ -1,7 +1,7 @@
 import {Colors, Coordinates, Drawable, MatrixCoordinates, Piece} from "@/types";
 import Disc from "./Disc";
 import {ctx} from "./canvasContext";
-import {buildRepeatedArray, getMatrixDiagonals, isSubArray, transposeMatrix} from "@/util/helpers";
+import {buildRepeatedArray, getAllMatrixDiagonals, isSubArray, transposeMatrix} from "@/util/helpers";
 import Player from "@/game/Player";
 
 export default class Board implements Drawable {
@@ -83,9 +83,7 @@ export default class Board implements Drawable {
     checkConnectFour(): boolean {
         const matrix_tanspose = transposeMatrix(this.matrix);
 
-        const mainDiagonals = getMatrixDiagonals(this.matrix, 'primary');
-        const secondaryDiagonals = getMatrixDiagonals(this.matrix, 'secondary');
-        const diagonals = mainDiagonals.concat(secondaryDiagonals);
+        const diagonals = getAllMatrixDiagonals(this.matrix);
 
         return this.matrix.some((row: number[]) => this.checkArrayConnectFour(row)) ||
             matrix_tanspose.some((column: number[]) => this.checkArrayConnectFour(column)) ||

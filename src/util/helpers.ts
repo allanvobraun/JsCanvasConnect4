@@ -1,6 +1,5 @@
 import {Colors, Coordinates} from "@/types";
 import {ctx} from "@/game/canvasContext";
-import Disc from "@/game/Disc";
 
 export function drawEquilateralTriangle(
     coordinate: Coordinates,
@@ -60,6 +59,12 @@ export function getMatrixDiagonals<T>(matrix: T[][], diagonalType: diagonalsType
         newMatrix.push(diagonal);
     }
     return newMatrix;
+}
+
+export function getAllMatrixDiagonals<T>(matrix: T[][]): T[][] {
+    const mainDiagonals = getMatrixDiagonals(matrix, 'primary');
+    const secondaryDiagonals = getMatrixDiagonals(matrix, 'secondary');
+    return mainDiagonals.concat(secondaryDiagonals);
 }
 
 export function arrayEquals(array1: number[], array2: number[]): boolean {
