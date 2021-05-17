@@ -1,6 +1,6 @@
 import Player from "@/game/Player";
 import Board from "@/game/Board";
-import {buildRepeatedArray, getAllMatrixDiagonals, isSubArray, transposeMatrix} from "@/util/helpers";
+import {combinatoryMatrixOf, getAllMatrixDiagonals, isSubArray, stripMatrixRows, transposeMatrix} from "@/util/helpers";
 import Game from "@/game/Game";
 import cloneDeep from "lodash.clonedeep";
 import {BoardConfiguration, Piece} from "@/types";
@@ -17,6 +17,7 @@ class IA {
     configurations: BoardConfiguration[];
     winConfiguration: BoardConfiguration[];
     game: Game;
+    optimizeEmptyRows: boolean = true;
 
     constructor(player: Player, enemy: Player, game: Game) {
         this.player = player;
@@ -34,47 +35,16 @@ class IA {
     }
 
     play(): void {
-        const jogada = this.getBestPlay(4);
+        const jogada = this.getBestPlay(6);
         this.game.play(jogada.position);
     }
 
-    rateBoard(board: Board): number {
-        const locatedConfigurations: BoardConfiguration[] = [];
-        const matrix_tanspose = transposeMatrix(board.matrix);
-
-        for (const row of board.matrix) {
-            const winConfiguration = this.winConfiguration.find((winConfig) => isSubArray(row, winConfig.pieces));
-            if (winConfiguration) {
-                return winConfiguration.points;
-            }
-            const locatedConfigurationsInRow = this.configurations.filter((configuration) => isSubArray(row, configuration.pieces));
-            locatedConfigurations.push(...locatedConfigurationsInRow);
+    rateBoard(board: Board, endgameBoard: boolean): number {
+        if (endgameBoard) {
+            return this.getWinConfiguration(board.matrix).points;
         }
 
-        for (const column of matrix_tanspose) {
-            if (isSubArray(column, buildRepeatedArray(Piece.EMPTY, 6))) continue;
-            const winConfiguration = this.winConfiguration.find((winConfig) => {
-                return isSubArray(column, winConfig.pieces);
-            });
-            if (winConfiguration) {
-                return winConfiguration.points;
-            }
-            const locatedConfigurationsInColumn = this.configurations.filter((configuration) => isSubArray(column, configuration.pieces));
-            locatedConfigurations.push(...locatedConfigurationsInColumn);
-        }
-
-        const matrixDiagonals = getAllMatrixDiagonals(board.matrix);
-        for (const diagonal of matrixDiagonals) {
-            if (isSubArray(diagonal, buildRepeatedArray(Piece.EMPTY, 6))) continue;
-            const winConfiguration = this.winConfiguration.find((winConfig) => {
-                return isSubArray(diagonal, winConfig.pieces);
-            });
-            if (winConfiguration) {
-                return winConfiguration.points;
-            }
-            const locatedConfigurationsInColumn = this.configurations.filter((configuration) => isSubArray(diagonal, configuration.pieces));
-            locatedConfigurations.push(...locatedConfigurationsInColumn);
-        }
+        const locatedConfigurations: BoardConfiguration[] = this.getConfigurations(board.matrix);
 
         if (locatedConfigurations.length === 0) {
             return 0;
@@ -83,8 +53,49 @@ class IA {
         return locatedConfigurations.reduce((acc, config) => config.points + acc, 0);
     }
 
+    getConfigurations(matrix: number[][]): BoardConfiguration[] {
+        const locatedConfigurations: BoardConfiguration[] = [];
+        let testMatrix: number[][];
+
+        if (this.optimizeEmptyRows) {
+            const stripedMatrix = stripMatrixRows(matrix, Piece.EMPTY);
+            testMatrix = combinatoryMatrixOf(stripedMatrix);
+        } else {
+            testMatrix = combinatoryMatrixOf(matrix);
+        }
+
+        for (const row of testMatrix) {
+            const locatedConfigurationsInRow = this.configurations.filter((configuration) => isSubArray(row, configuration.pieces));
+            locatedConfigurations.push(...locatedConfigurationsInRow);
+        }
+        return locatedConfigurations;
+    }
+
+
+    getWinConfiguration(matrix: number[][]): BoardConfiguration {
+        const nomalMatrix = this.getWinConfigurationOf(matrix);
+        if (nomalMatrix) return nomalMatrix;
+
+        const transpostedMatrix = this.getWinConfigurationOf(transposeMatrix(matrix));
+        if (transpostedMatrix) return transpostedMatrix;
+
+        const matrixDiagonals = this.getWinConfigurationOf(getAllMatrixDiagonals(matrix));
+        if (matrixDiagonals) return matrixDiagonals;
+    }
+
+    getWinConfigurationOf(matrix: number[][]): BoardConfiguration {
+        for (const row of matrix) {
+            const winConfiguration = this.winConfiguration.find((winConfig) => {
+                return isSubArray(row, winConfig.pieces);
+            });
+            if (winConfiguration) return winConfiguration;
+        }
+        return null;
+    }
+
+
     isTerminalNode(board: Board): boolean {
-        return board.isFull() || board.checkConnectFour();
+        return board.checkConnectFour() || board.isFull();
     }
 
     possibleColumnsToMove(board: Board): number[] {
@@ -102,12 +113,14 @@ class IA {
     }
 
     minimax(board: Board, depth: number): ScorePosition {
-        return this.maximazing(board, depth,Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
+        return this.maximazing(board, depth, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
     }
 
     maximazing(board: Board, depth: number, alpha: number, beta: number): ScorePosition {
-        if (depth === 0 || this.isTerminalNode(board)) {
-            return {score: this.rateBoard(board), position: null};
+        if (this.isTerminalNode(board)) {
+            return {score: this.rateBoard(board, true), position: null};
+        } else if (depth === 0) {
+            return {score: this.rateBoard(board, false), position: null};
         }
         let pivotScore: ScorePosition = {score: Number.NEGATIVE_INFINITY, position: null};
 
@@ -118,18 +131,18 @@ class IA {
             const minimax = this.minimizing(boardCopy, depth - 1, alpha, beta);
             pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.max);
 
-            if (pivotScore.score >= beta) {
-                console.log("max alphabeta");
-                return pivotScore;
-            }
+            if (pivotScore.score >= beta) return pivotScore;
+
             alpha = Math.max(alpha, pivotScore.score);
         }
         return pivotScore;
     }
 
     minimizing(board: Board, depth: number, alpha: number, beta: number): ScorePosition {
-        if (depth === 0 || this.isTerminalNode(board)) {
-            return {score: this.rateBoard(board), position: null};
+        if (this.isTerminalNode(board)) {
+            return {score: this.rateBoard(board, true), position: null};
+        } else if (depth === 0) {
+            return {score: this.rateBoard(board, false), position: null};
         }
         let pivotScore: ScorePosition = {score: Number.POSITIVE_INFINITY, position: null};
 
@@ -140,10 +153,8 @@ class IA {
             const minimax = this.maximazing(boardCopy, depth - 1, alpha, beta);
             pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.min);
 
-            if (pivotScore.score <= alpha) {
-                console.log("min alphabeta");
-                return pivotScore;
-            }
+            if (pivotScore.score <= alpha) return pivotScore;
+
             beta = Math.min(beta, pivotScore.score);
         }
         return pivotScore;

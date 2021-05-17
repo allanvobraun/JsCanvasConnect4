@@ -67,6 +67,31 @@ export function getAllMatrixDiagonals<T>(matrix: T[][]): T[][] {
     return mainDiagonals.concat(secondaryDiagonals);
 }
 
+/**
+ * Retorna uma matriz feita da matriz transposta  + matriz de diagonais + matriz original
+ * @param matrix
+ */
+export function combinatoryMatrixOf<T>(matrix: T[][]): T[][] {
+    return matrix.concat(transposeMatrix(matrix), getAllMatrixDiagonals(matrix));
+}
+
+/**
+ * Remove empty rows
+ * @param matrix
+ * @param emptyItem
+ */
+export function stripMatrixRows(matrix: number[][], emptyItem: number): number[][] {
+    const newMatrix: number[][] = [];
+    const emptyRow = buildRepeatedArray(emptyItem, matrix[0].length);
+    for (const row of matrix) {
+        if (arrayEquals(emptyRow, row)) {
+            continue;
+        }
+        newMatrix.push(row);
+    }
+    return newMatrix;
+}
+
 export function arrayEquals(array1: number[], array2: number[]): boolean {
     if (array1.length !== array2.length) return false;
     if (array1.length === 0) return true;
