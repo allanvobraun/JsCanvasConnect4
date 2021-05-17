@@ -99,7 +99,7 @@ class IA {
     }
 
     getBestPlay(depht: number = 1): ScorePosition {
-        return this.minimax(this.game.board, depht, null, true);
+        return this.minimax(this.game.board, depht, null);
     }
 
     testMinMax(): void {
@@ -112,35 +112,71 @@ class IA {
             [2, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 1],
         ];
-        console.log(this.minimax(board, 2, 0, true));
+        console.log(this.minimax(board, 2, 0));
     }
 
-    minimax(board: Board, depth: number, position: number, maximizingPlayer: boolean): ScorePosition {
+    minimax(board: Board, depth: number, position: number): ScorePosition {
+        return this.maximazing(board, depth, position);
+    }
+
+    maximazing(board: Board, depth: number, position: number): ScorePosition {
         if (depth === 0 || this.isTerminalNode(board)) {
             return {score: this.rateBoard(board), position};
         }
-        if (maximizingPlayer) {
-            let pivotScore: ScorePosition = {score: Number.NEGATIVE_INFINITY, position: null};
+        let pivotScore: ScorePosition = {score: Number.NEGATIVE_INFINITY, position: null};
 
-            for (const moveIndex of this.possibleColumnsToMove(board)) {
-                const boardCopy = cloneDeep(board);
-                boardCopy.placeDisc(moveIndex, this.player);
-                const minimax = this.minimax(boardCopy, depth - 1, moveIndex, false);
-                pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.max);
-            }
-            return pivotScore;
-        } else {
-            let pivotScore: ScorePosition = {score: Number.POSITIVE_INFINITY, position: null};
+        for (const moveIndex of this.possibleColumnsToMove(board)) {
+            const boardCopy = cloneDeep(board);
+            boardCopy.placeDisc(moveIndex, this.player);
 
-            for (const moveIndex of this.possibleColumnsToMove(board)) {
-                const boardCopy = cloneDeep(board);
-                boardCopy.placeDisc(moveIndex, this.opponent);
-                const minimax = this.minimax(boardCopy, depth - 1, moveIndex, true);
-                pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.min);
-            }
-            return pivotScore;
+            const minimax = this.minimizing(boardCopy, depth - 1, moveIndex);
+            pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.max);
         }
+        return pivotScore;
     }
+
+    minimizing(board: Board, depth: number, position: number): ScorePosition {
+        if (depth === 0 || this.isTerminalNode(board)) {
+            return {score: this.rateBoard(board), position};
+        }
+        let pivotScore: ScorePosition = {score: Number.POSITIVE_INFINITY, position: null};
+
+        for (const moveIndex of this.possibleColumnsToMove(board)) {
+            const boardCopy = cloneDeep(board);
+            boardCopy.placeDisc(moveIndex, this.player);
+
+            const minimax = this.maximazing(boardCopy, depth - 1, moveIndex);
+            pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.min);
+        }
+        return pivotScore;
+    }
+
+    // minimax(board: Board, depth: number, position: number, maximizingPlayer: boolean): ScorePosition {
+    //     if (depth === 0 || this.isTerminalNode(board)) {
+    //         return {score: this.rateBoard(board), position};
+    //     }
+    //     if (maximizingPlayer) {
+    //         let pivotScore: ScorePosition = {score: Number.NEGATIVE_INFINITY, position: null};
+    //
+    //         for (const moveIndex of this.possibleColumnsToMove(board)) {
+    //             const boardCopy = cloneDeep(board);
+    //             boardCopy.placeDisc(moveIndex, this.player);
+    //             const minimax = this.minimax(boardCopy, depth - 1, moveIndex, false);
+    //             pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.max);
+    //         }
+    //         return pivotScore;
+    //     } else {
+    //         let pivotScore: ScorePosition = {score: Number.POSITIVE_INFINITY, position: null};
+    //
+    //         for (const moveIndex of this.possibleColumnsToMove(board)) {
+    //             const boardCopy = cloneDeep(board);
+    //             boardCopy.placeDisc(moveIndex, this.opponent);
+    //             const minimax = this.minimax(boardCopy, depth - 1, moveIndex, true);
+    //             pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.min);
+    //         }
+    //         return pivotScore;
+    //     }
+    // }
 
     chooseNewScore(old: ScorePosition, actual: ScorePosition, criterion: (a: number, b: number) => number): ScorePosition {
         if (old.score === actual.score) {
