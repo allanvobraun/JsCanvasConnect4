@@ -34,8 +34,7 @@ class IA {
     }
 
     play(): void {
-        console.log("A IA VAI JOGAR");
-        const jogada = this.getBestPlay(2);
+        const jogada = this.getBestPlay(4);
         this.game.play(jogada.position);
     }
 
