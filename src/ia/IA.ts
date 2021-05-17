@@ -34,8 +34,7 @@ class IA {
     }
 
     play(): void {
-        console.log("A IA VAI JOGAR");
-        const jogada = this.getBestPlay(2);
+        const jogada = this.getBestPlay(4);
         this.game.play(jogada.position);
     }
 
@@ -103,10 +102,10 @@ class IA {
     }
 
     minimax(board: Board, depth: number): ScorePosition {
-        return this.maximazing(board, depth);
+        return this.maximazing(board, depth,Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
     }
 
-    maximazing(board: Board, depth: number): ScorePosition {
+    maximazing(board: Board, depth: number, alpha: number, beta: number): ScorePosition {
         if (depth === 0 || this.isTerminalNode(board)) {
             return {score: this.rateBoard(board), position: null};
         }
@@ -116,13 +115,19 @@ class IA {
             const boardCopy = cloneDeep(board);
             boardCopy.placeDisc(moveIndex, this.player);
 
-            const minimax = this.minimizing(boardCopy, depth - 1);
+            const minimax = this.minimizing(boardCopy, depth - 1, alpha, beta);
             pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.max);
+
+            if (pivotScore.score >= beta) {
+                console.log("max alphabeta");
+                return pivotScore;
+            }
+            alpha = Math.max(alpha, pivotScore.score);
         }
         return pivotScore;
     }
 
-    minimizing(board: Board, depth: number): ScorePosition {
+    minimizing(board: Board, depth: number, alpha: number, beta: number): ScorePosition {
         if (depth === 0 || this.isTerminalNode(board)) {
             return {score: this.rateBoard(board), position: null};
         }
@@ -132,8 +137,14 @@ class IA {
             const boardCopy = cloneDeep(board);
             boardCopy.placeDisc(moveIndex, this.opponent);
 
-            const minimax = this.maximazing(boardCopy, depth - 1);
+            const minimax = this.maximazing(boardCopy, depth - 1, alpha, beta);
             pivotScore = this.chooseNewScore(pivotScore, {position: moveIndex, score: minimax.score}, Math.min);
+
+            if (pivotScore.score <= alpha) {
+                console.log("min alphabeta");
+                return pivotScore;
+            }
+            beta = Math.min(beta, pivotScore.score);
         }
         return pivotScore;
     }
