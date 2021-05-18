@@ -7,15 +7,21 @@ import Player from "@/game/Player";
 import {Colors, Piece} from "@/types";
 
 window.onload = () => {
+    const userPlayer = new Player('MIN', Colors.RED, Piece.P1);
+    const iaPlayer = new Player('MAX', Colors.SHREK, Piece.P2);
+
     const players = [
-        new Player('MIN', Colors.RED, Piece.P1),
-        new Player('MAX', Colors.SHREK, Piece.P2),
+        userPlayer,
+        iaPlayer,
     ];
+
     const game = new Game(players);
-    const controller = new GameController(game);
-    game.keyboardHandler = new KeyboardHandler(controller);
+    const playerController = new GameController(game, userPlayer);
+    const iaController = new GameController(game, iaPlayer);
+
+    game.keyboardHandler = new KeyboardHandler(playerController);
     game.run();
-    const robo = new IA(players[1], players[0], game);
-    (window as any).robo = robo;
-    console.log(robo);
+    const robo = new IA(iaPlayer, userPlayer, game, iaController);
+    // (window as any).robo = robo;
+    // console.log(robo);
 };

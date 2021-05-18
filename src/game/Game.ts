@@ -43,7 +43,7 @@ class Game {
         return this.players.get(this.playerTurnIndex + 1);
     }
 
-    play(discPosition?: number): void {
+    play(player: Player, discPosition?: number): void {
         if (this.board.columnIsFull(this.arrow.actualPosition)) return;
         this.board.placeDisc(discPosition ?? this.arrow.actualPosition, this.actualPlayer);
 

@@ -5,6 +5,7 @@ import Game from "@/game/Game";
 import cloneDeep from "lodash.clonedeep";
 import {BoardConfiguration, Piece} from "@/types";
 import BoardConfigurationFactory from "@/ia/BoardConfigurationFactory";
+import GameController from "@/game/GameController";
 
 interface ScorePosition {
     score: number;
@@ -17,26 +18,28 @@ class IA {
     configurations: BoardConfiguration[];
     winConfiguration: BoardConfiguration[];
     game: Game;
+    iaController: GameController;
     optimizeEmptyRows: boolean = true;
 
-    constructor(player: Player, enemy: Player, game: Game) {
+    constructor(player: Player, enemy: Player, game: Game, iaController: GameController) {
         this.player = player;
         this.opponent = enemy;
         this.game = game;
+        this.iaController = iaController;
 
         this.configurations = BoardConfigurationFactory.buildNormalConfigurations(this.player, this.opponent);
         this.winConfiguration = BoardConfigurationFactory.buildWinConfigurations(this.player, this.opponent);
 
         window.addEventListener('fim-jogada', ((event: CustomEvent) => {
             if (event.detail === this.player) {
-                this.play();
+                setTimeout(() => this.play(), 1000);
             }
         }) as EventListener);
     }
 
     play(): void {
-        const jogada = this.getBestPlay(6);
-        this.game.play(jogada.position);
+        const jogada = this.getBestPlay(4);
+        this.iaController.playerMove(jogada.position);
     }
 
     rateBoard(board: Board, endgameBoard: boolean): number {

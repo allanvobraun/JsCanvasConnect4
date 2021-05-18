@@ -1,10 +1,19 @@
 import Game from "@/game/Game";
+import Player from "@/game/Player";
 
 class GameController {
     game: Game;
+    player: Player;
+    locked: boolean;
 
-    constructor(game: Game) {
+    constructor(game: Game, player: Player, startLocked: boolean = false) {
         this.game = game;
+        this.player = player;
+        this.locked = startLocked;
+
+        window.addEventListener('fim-jogada', ((event: CustomEvent) => {
+            this.locked = event.detail !== this.player;
+        }) as EventListener);
     }
 
     moveLeft(): void {
@@ -15,8 +24,10 @@ class GameController {
         this.game.arrow.moveRight();
     }
 
-    playerMove(discPosition?: number): void {
-        this.game.play(discPosition);
+    playerMove(position?: number): void {
+        if (!this.locked) {
+            this.game.play(this.player, position);
+        }
     }
 }
 
